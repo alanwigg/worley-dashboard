@@ -199,9 +199,28 @@ function FlowLines({ mwValue }: { mwValue: MotionValue<number> }) {
   );
 }
 
+function CameraRig() {
+  useFrame((state) => {
+    // Base camera vector is [10, 3, 11]
+    // Multiply inverted pointer values to shift the camera opposite the mouse, creating a smooth physical object parallax effect
+    const targetX = 10 + (state.pointer.x * -7); 
+    const targetY = 3 + (state.pointer.y * -4);
+    const targetZ = 11 + (state.pointer.x * 3); // Keeps orbital arc consistent
+
+    // Easing mathematical step - highly dampened (0.05) to ensure it feels "heavy" and not jerky!
+    state.camera.position.x += (targetX - state.camera.position.x) * 0.03;
+    state.camera.position.y += (targetY - state.camera.position.y) * 0.03;
+    state.camera.position.z += (targetZ - state.camera.position.z) * 0.03;
+    
+    // Look gently up at the primary Nacelle hub gear
+    state.camera.lookAt(0, 1.5, 0); 
+  });
+  return null;
+}
+
 export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
   return (
-    <div className="relative w-full h-[500px] lg:h-[750px] cursor-grab active:cursor-grabbing flex flex-col items-center justify-center">
+    <div className="relative w-full h-[500px] lg:h-[750px] flex flex-col items-center justify-center">
       {/* Background ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[var(--cyan-primary)] rounded-full blur-[140px] opacity-10 pointer-events-none z-0" />
 
@@ -211,7 +230,7 @@ export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
         <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.1}>
           <TurbineModel mwValue={mwValue} />
         </Float>
-        <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.3} maxPolarAngle={Math.PI / 2.1} minPolarAngle={Math.PI / 3.5} />
+        <CameraRig />
       </Canvas>
 
       <FlowLines mwValue={mwValue} />
