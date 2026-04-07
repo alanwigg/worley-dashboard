@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls, Float, Edges, Trail, Sparkles, Html } from '@react-three/drei';
 import { MotionValue, useTransform, motion } from 'framer-motion';
 import * as THREE from 'three';
@@ -12,6 +12,7 @@ const CYAN_COLOR = "#29c8c1"; // Sky Mist
 const RED_COLOR = "#f43a4f"; // Scorched Rose
 
 function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<number>, isMobile: boolean, isHovered: boolean }) {
+  const logoTexture = useLoader(THREE.TextureLoader, '/worley-imprint.svg');
   const bladesRef = useRef<THREE.Group>(null);
   const gearsRef = useRef<THREE.Group>(null);
   const turbineRootRef = useRef<THREE.Group>(null);
@@ -134,12 +135,11 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
           <meshBasicMaterial ref={motorGradientRef} color={RED_COLOR} transparent />
           <Edges color={STROKE_COLOR} />
           
-          {/* Precision mapped Worley imprint Decal onto the flat backing - Math.PI/2 rotation anchors it flush with the cylinder disc */}
-          <Html position={[0, -0.405, 0]} rotation={[-Math.PI / 2, 0, 0]} transform center pointerEvents="none">
-             <div className="w-[85px] h-[85px] opacity-90 drop-shadow-md flex justify-center items-center">
-                <img src="/worley-imprint.svg" alt="Worley Imprint" className="w-[85%] h-[85%] object-contain" />
-             </div>
-          </Html>
+          {/* Precision mapped Worley imprint Texture mapped onto a physical Circle Geometry capping the cylinder face */}
+          <mesh position={[0, -0.402, 0]} rotation={[Math.PI / 2, Math.PI, 0]}>
+            <circleGeometry args={[0.28, 32]} />
+            <meshBasicMaterial map={logoTexture} transparent opacity={0.9} depthWrite={false} color="#FFFFFF" />
+          </mesh>
         </mesh>
 
         {/* Nose Dome Bulb */}
@@ -285,9 +285,11 @@ export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
       {/* 3D Canvas Context */}
       <Canvas camera={{ position: [10, 3, 11], fov: 45 }} style={{ zIndex: 10 }}>
         <ambientLight intensity={1} />
-        <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.1}>
-          <TurbineModel mwValue={mwValue} isMobile={isMobile} isHovered={isHovered} />
-        </Float>
+        <React.Suspense fallback={null}>
+           <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.1}>
+             <TurbineModel mwValue={mwValue} isMobile={isMobile} isHovered={isHovered} />
+           </Float>
+        </React.Suspense>
         
         {/* Strictly inject tactile OrbitControls natively back on Mobile grids for swipe functionality! */}
         {isMobile && (
