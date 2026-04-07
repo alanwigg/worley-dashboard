@@ -63,8 +63,8 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col items-center lg:items-end text-right z-50 w-full lg:max-w-sm p-4 pt-10 lg:pt-4">
         <div className="w-full mb-12 relative flex flex-col items-center gap-6">
           
-          {/* Top Metrics Glass Container */}
-          <div className="w-full flex flex-col items-center gap-4 bg-[var(--background)]/30 backdrop-blur-xl p-6 rounded-xl shadow-2xl border border-white/10">
+          {/* Top Metrics - Removed Box Wrapper */}
+          <div className="w-full flex flex-col items-center gap-4">
             <PowerGauge mwSpring={mwSpring} />
             <MetricsModule mwSpring={mwSpring} />
           </div>
