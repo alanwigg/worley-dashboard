@@ -30,10 +30,10 @@ const TinyTurbine = ({ x, y, delay, scaleFactor = 1 }: { x: number, y: number, d
 export function AustraliaMap() {
   return (
     // Switch to flex column without hardcoded absolute heights to allow natural document flow
-    <div className="w-full flex flex-col mt-4">
+    <div className="w-full flex flex-col mt-0 lg:mt-0">
       
       {/* Header Metric Row */}
-      <div className="w-full flex justify-between items-start z-10 mb-4">
+      <div className="w-full flex justify-between items-start z-10 mb-0">
          {/* Left Stat */}
          <div className="flex flex-col items-start drop-shadow-sm">
             <div className="text-[28px] font-bold font-mono text-[var(--background)] tracking-tighter leading-none">
@@ -57,7 +57,7 @@ export function AustraliaMap() {
       </div>
 
       {/* Increased viewBox and adjusted negative space so Tasmania renders perfectly without cutoff */}
-      <svg width="100%" height="auto" viewBox="0 0 100 90" className="opacity-100 overflow-visible mt-2 drop-shadow-xl min-h-[250px]">
+      <svg width="100%" height="auto" viewBox="0 0 100 90" className="opacity-100 overflow-visible mt-0 drop-shadow-xl min-h-[220px]">
          <defs>
            <filter id="landShadow">
              <feDropShadow dx="-2" dy="2" stdDeviation="3" floodColor="rgba(0,0,0,0.4)" floodOpacity="0.8"/>
@@ -108,7 +108,7 @@ export function AustraliaMap() {
       </svg>
 
       {/* Map Legend / Key structurally rendered strictly underneath map */}
-      <div className="w-full flex items-center justify-start gap-4 z-10 opacity-80 bg-[var(--cyan-primary)] p-3 px-4 rounded-md shadow-lg border border-[var(--background)]/20 mt-6 lg:mt-8 mb-4">
+      <div className="w-full flex items-center justify-start gap-4 z-10 opacity-80 bg-[var(--cyan-primary)] p-3 px-4 rounded-md shadow-lg border border-[var(--background)]/20 mt-1 lg:mt-2 mb-2">
          <div className="flex items-center gap-3">
              <svg width="12" height="15" viewBox="-8 -8 20 25" className="overflow-visible">
                 <TinyTurbine x={0} y={5} delay={0} scaleFactor={0.8} />
