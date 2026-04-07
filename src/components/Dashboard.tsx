@@ -60,13 +60,13 @@ export default function Dashboard() {
       </div>
 
       {/* Center Visualization */}
-      <div className="flex-[1.5] flex justify-center items-center w-full z-10 relative mt-16 lg:mt-0 translate-x-0 lg:translate-x-[35px]">
+      <div className="flex-[1.5] flex flex-col justify-center items-center w-full z-10 relative mt-16 lg:mt-0 translate-x-0 lg:translate-x-[35px]">
         <Turbine mwValue={mwSpring} />
         
         {/* Mobile Interactive Scroll Bypass */}
         <button 
            onClick={scrollToData}
-           className="lg:hidden absolute bottom-4 animate-bounce flex items-center justify-center bg-[var(--cyan-primary)] text-[var(--background)] p-3 rounded-full hover:bg-[var(--foreground)] transition-colors shadow-2xl z-50 ring-2 ring-[var(--background)]/10"
+           className="lg:hidden absolute top-[65%] right-6 animate-pulse flex items-center justify-center bg-[var(--cyan-primary)] text-[var(--background)] p-4 rounded-full hover:bg-[var(--foreground)] transition-colors shadow-[0_0_30px_rgba(41,200,193,0.5)] z-[100] ring-4 ring-white/10"
            aria-label="Scroll past 3D module"
         >
            <ChevronDown size={32} />
