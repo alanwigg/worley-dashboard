@@ -2,9 +2,11 @@
 import React from 'react';
 
 const TinyTurbine = ({ x, y, delay, scaleFactor = 1 }: { x: number, y: number, delay: number, scaleFactor?: number }) => (
-  <g transform={`translate(${x}, ${y}) scale(${0.3 * scaleFactor})`}>
-    {/* Sun cast shadow extended heavily to the left */}
-    <ellipse cx="-12" cy="14" rx="14" ry="2" fill="rgba(0,0,0,0.5)" transform="rotate(15, -12, 14)" />
+  // Boosted base scale from 0.3 to 0.45 for global visibility increase
+  <g transform={`translate(${x}, ${y}) scale(${0.45 * scaleFactor})`}>
+    
+    {/* Shadow perfectly locked to the (0, 13) base coordinate spreading leftwards */}
+    <ellipse cx="-10" cy="13" rx="10" ry="1.5" fill="rgba(0,0,0,0.5)" />
 
     <line x1="0" y1="0" x2="0" y2="12" stroke="var(--alert-red)" strokeWidth="2" />
     <circle cx="0" cy="0" r="1.5" fill="var(--alert-red)" />
@@ -27,10 +29,11 @@ const TinyTurbine = ({ x, y, delay, scaleFactor = 1 }: { x: number, y: number, d
 
 export function AustraliaMap() {
   return (
-    <div className="relative w-full h-[300px] flex items-center justify-center mt-2">
+    // Height expanded from 300 to 380 to comfortably fit the extended bottom legend
+    <div className="relative w-full h-[380px] flex items-start justify-center mt-2">
       
       {/* Metric Stat positioned freely at top left */}
-      <div className="absolute -top-4 left-4 flex flex-col items-start z-10">
+      <div className="absolute top-0 left-0 flex flex-col items-start z-10 mt-2">
          <div className="text-[28px] font-bold font-mono text-[var(--background)] tracking-tighter leading-none drop-shadow-sm">
             114
          </div>
@@ -40,22 +43,30 @@ export function AustraliaMap() {
          </div>
       </div>
 
-      {/* Map Legend / Key */}
-      <div className="absolute bottom-6 left-4 flex flex-col gap-3 z-10 opacity-80 bg-[var(--cyan-primary)] p-3 rounded-md shadow-lg border border-[var(--background)]/20">
-         <div className="flex items-center gap-4">
-             <svg width="15" height="15" viewBox="-10 -10 20 25" className="overflow-visible">
-                <TinyTurbine x={2} y={5} delay={0} scaleFactor={0.8} />
+      {/* Map Legend / Key separated far below and to the left */}
+      <div className="absolute bottom-0 left-0 flex items-center gap-6 z-10 opacity-80 bg-[var(--cyan-primary)] p-3 px-4 rounded-md shadow-lg border border-[var(--background)]/20">
+         <div className="flex items-center gap-3">
+             <svg width="12" height="15" viewBox="-8 -8 20 25" className="overflow-visible">
+                <TinyTurbine x={0} y={5} delay={0} scaleFactor={0.8} />
              </svg>
-             <div className="text-[9px] font-mono text-[var(--background)] font-bold tracking-widest leading-none mt-1">
-                LOW VOL
+             <div className="text-[10px] font-mono text-[var(--background)] tracking-widest leading-none mt-1">
+                &lt;20 <span className="text-[8px] opacity-70">UNITS</span>
              </div>
          </div>
-         <div className="flex items-center gap-4">
-             <svg width="15" height="22" viewBox="-10 -10 20 25" className="overflow-visible">
-                <TinyTurbine x={2} y={5} delay={0} scaleFactor={1.8} />
+         <div className="flex items-center gap-3 border-l border-[var(--background)]/30 pl-4">
+             <svg width="12" height="20" viewBox="-8 -8 20 25" className="overflow-visible">
+                <TinyTurbine x={0} y={5} delay={0} scaleFactor={1.2} />
              </svg>
-             <div className="text-[9px] font-mono text-[var(--background)] font-bold tracking-widest leading-none mt-1">
-                HIGH VOL
+             <div className="text-[10px] font-mono text-[var(--background)] tracking-widest leading-none mt-1">
+                +20 <span className="text-[8px] opacity-70">UNITS</span>
+             </div>
+         </div>
+         <div className="flex items-center gap-3 border-l border-[var(--background)]/30 pl-4">
+             <svg width="12" height="26" viewBox="-8 -8 20 30" className="overflow-visible">
+                <TinyTurbine x={0} y={5} delay={0} scaleFactor={1.8} />
+             </svg>
+             <div className="text-[10px] font-mono text-[var(--background)] font-bold tracking-widest leading-none mt-1">
+                LARGE 40+
              </div>
          </div>
       </div>
