@@ -41,8 +41,8 @@ function TurbineModel({ mwValue }: { mwValue: MotionValue<number> }) {
     }
   });
 
-  const scale = isMobile ? 0.95 : 1.35;
-  const posY = isMobile ? -2.8 : -3.8;
+  const scale = isMobile ? 1.1 : 1.35;
+  const posY = isMobile ? -2.2 : -3.8;
 
   return (
     <group position={[0, posY, 0]} scale={scale}>
@@ -156,8 +156,8 @@ function FlowLines({ mwValue }: { mwValue: MotionValue<number> }) {
         </defs>
 
         <g filter="url(#neonGlow)">
-          {/* THE MAIN THICK TRUNK - Using motion.path directly to ensure it renders correctly */}
-          <motion.path d="M 500,200 L 500,480" fill="none" strokeWidth="12" stroke={routeColor} />
+          {/* THE MAIN THICK TRUNK - Dropped origin from 200 to 280 to prevent poking out */}
+          <motion.path d="M 500,280 L 500,480" fill="none" strokeWidth="12" stroke={routeColor} />
           <motion.circle cx="500" cy="480" r="15" fill="none" strokeWidth="4" stroke={routeColor} />
 
           {/* Branches dispersing from the base */}
@@ -180,16 +180,16 @@ function FlowLines({ mwValue }: { mwValue: MotionValue<number> }) {
             <circle key={i} r="4">
               <animateMotion dur={`${1.2 + (i * 0.2)}s`} repeatCount="indefinite" begin={`${(i * 0.15) % 1}s`}
                 path={[
-                  "M 500,200 L 500,480 C 420,500 200,480 0,550",
-                  "M 500,200 L 500,480 C 440,520 250,530 -50,650",
-                  "M 500,200 L 500,480 C 460,550 350,560 200,700",
-                  "M 500,200 L 500,480 C 480,560 450,600 350,700",
-                  "M 500,200 L 500,480 C 500,560 500,600 500,750",
-                  "M 500,200 L 500,480 C 520,560 550,600 650,700",
-                  "M 500,200 L 500,480 C 540,550 650,560 800,700",
-                  "M 500,200 L 500,480 C 560,520 750,530 1050,650",
-                  "M 500,200 L 500,480 C 580,500 850,490 1050,580",
-                  "M 500,200 L 500,480 C 600,490 700,470 1000,500"
+                  "M 500,280 L 500,480 C 420,500 200,480 0,550",
+                  "M 500,280 L 500,480 C 440,520 250,530 -50,650",
+                  "M 500,280 L 500,480 C 460,550 350,560 200,700",
+                  "M 500,280 L 500,480 C 480,560 450,600 350,700",
+                  "M 500,280 L 500,480 C 500,560 500,600 500,750",
+                  "M 500,280 L 500,480 C 520,560 550,600 650,700",
+                  "M 500,280 L 500,480 C 540,550 650,560 800,700",
+                  "M 500,280 L 500,480 C 560,520 750,530 1050,650",
+                  "M 500,280 L 500,480 C 580,500 850,490 1050,580",
+                  "M 500,280 L 500,480 C 600,490 700,470 1000,500"
                 ][i]} />
             </circle>
           ))}
