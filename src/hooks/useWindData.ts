@@ -8,6 +8,19 @@ type DataPoint = { time: string; efficiency: number };
 export function useWindData() {
   const [targetMW, setTargetMW] = useState(BASE_MW);
   const [history, setHistory] = useState<DataPoint[]>([]);
+  const [realWindSpeed, setRealWindSpeed] = useState(24);
+
+  // Fetch real telemetry (Open-Meteo current wind speed for major Australian coastal windfarm coordinates)
+  useEffect(() => {
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=-39.9&longitude=143.9&current_weather=true')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.current_weather?.windspeed) {
+          setRealWindSpeed(data.current_weather.windspeed);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   // Initialize history
   useEffect(() => {
@@ -33,11 +46,15 @@ export function useWindData() {
 
       setTargetMW(tickMW);
 
-      // Add to history
+      // Add to history with high mechanical volatility
       setHistory(prev => {
+        const hnoise = (Math.random() - 0.5) * 5.0; // Significant jitter for graphical movement
+        const wave = Math.sin(timeStep * 3) * 6; // Quick oscillating pattern
+        
         const next = [...prev, {
           time: new Date().toLocaleTimeString('en-US', { hour12: false, minute: '2-digit', second: '2-digit' }),
-          efficiency: Math.min(100, Math.max(0, 80 + (tickMW / 10) * 15 + (Math.random() - 0.5)))
+          // Baseline of 85, heavily influenced by volatile sine and noise to make the chart highly dynamic
+          efficiency: Math.min(100, Math.max(0, 85 + wave + hnoise + (sineWave * 5)))
         }];
         return next.slice(-6); 
       });
@@ -47,5 +64,5 @@ export function useWindData() {
     return () => clearInterval(interval);
   }, []);
 
-  return { targetMW, history };
+  return { targetMW, history, realWindSpeed };
 }

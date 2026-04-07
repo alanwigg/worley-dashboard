@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { motion, useTransform, MotionValue } from 'framer-motion';
+import { motion, useTransform, MotionValue, useSpring } from 'framer-motion';
 
-export function MetricsModule({ mwSpring }: { mwSpring: MotionValue<number> }) {
+export function MetricsModule({ mwSpring, realWindSpeed = 24 }: { mwSpring: MotionValue<number>; realWindSpeed?: number }) {
   const MAX_MW = 10;
   
   // Grid Load Extracted Logic
@@ -11,20 +11,25 @@ export function MetricsModule({ mwSpring }: { mwSpring: MotionValue<number> }) {
   const loadColor = useTransform(loadPercent, v => v > 90 ? 'var(--alert-red)' : 'var(--cyan-primary)');
   const alertText = useTransform(loadPercent, v => v > 90 ? 'CRITICAL' : 'NOMINAL');
 
-  // Wind speed mapped approximately from MW torque (Max power generated around 48 km/h winds)
-  const windSpeed = useTransform(mwSpring, [0, 10], [5, 48]);
-  const displayWindSpeed = useTransform(windSpeed, v => `${Math.round(v)}`);
+  // Inject Real API Wind Value into a localized animation spring
+  const windSpring = useSpring(realWindSpeed, { stiffness: 45, damping: 20 });
+  
+  useEffect(() => {
+    windSpring.set(realWindSpeed);
+  }, [realWindSpeed, windSpring]);
 
-  // Wind sock physically dropping/lifting based on wind speed
-  const sockRotation = useTransform(windSpeed, [5, 48], ["80deg", "-5deg"]);
+  const displayWindSpeed = useTransform(windSpring, v => `${Math.round(v)}`);
+
+  // Wind sock physically dropping/lifting based on the real wind speed
+  const sockRotation = useTransform(windSpring, [5, 48], ["80deg", "-5deg"]);
   
   // Track high-wind state natively to trigger CSS flapping classes
   const [isHighWind, setIsHighWind] = useState(false);
   useEffect(() => {
-     return windSpeed.on("change", (v) => {
+     return windSpring.on("change", (v) => {
         setIsHighWind(v > 25);
      });
-  }, [windSpeed]);
+  }, [windSpring]);
 
   return (
     <div className="w-full max-w-[300px] flex gap-3 mt-4">

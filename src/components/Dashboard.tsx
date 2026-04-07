@@ -11,7 +11,7 @@ import { ArrowRight, ChevronDown } from 'lucide-react';
 import { AustraliaMap } from './AustraliaMap';
 
 export default function Dashboard() {
-  const { targetMW, history } = useWindData();
+  const { targetMW, history, realWindSpeed } = useWindData();
   const dataVisRef = useRef<HTMLDivElement>(null);
 
   const scrollToData = () => {
@@ -80,7 +80,7 @@ export default function Dashboard() {
           {/* Top Metrics - Box explicitly removed per user request */}
           <div className="w-full flex flex-col items-center gap-4">
             <PowerGauge mwSpring={mwSpring} />
-            <MetricsModule mwSpring={mwSpring} />
+            <MetricsModule mwSpring={mwSpring} realWindSpeed={realWindSpeed} />
           </div>
 
           {/* Efficiency Chart Glass Container */}
