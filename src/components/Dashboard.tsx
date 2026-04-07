@@ -66,10 +66,10 @@ export default function Dashboard() {
         {/* Mobile Interactive Scroll Bypass */}
         <button 
            onClick={scrollToData}
-           className="lg:hidden absolute top-[65%] right-6 animate-pulse flex items-center justify-center bg-[var(--cyan-primary)] text-[var(--background)] p-4 rounded-full hover:bg-[var(--foreground)] transition-colors shadow-[0_0_30px_rgba(41,200,193,0.5)] z-[100] ring-4 ring-white/10"
+           className="lg:hidden absolute bottom-12 left-1/2 -translate-x-1/2 animate-pulse flex items-center justify-center bg-[var(--cyan-primary)]/20 backdrop-blur-md text-[var(--cyan-primary)] p-2.5 rounded-full hover:bg-[var(--cyan-primary)] hover:text-[var(--background)] transition-all shadow-[0_0_15px_rgba(41,200,193,0.2)] z-[100] border border-[var(--cyan-primary)]/40"
            aria-label="Scroll past 3D module"
         >
-           <ChevronDown size={32} />
+           <ChevronDown size={24} />
         </button>
       </div>
 
