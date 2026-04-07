@@ -33,7 +33,7 @@ export function AustraliaMap() {
     <div className="w-full flex flex-col mt-4">
       
       {/* Header Metric Row */}
-      <div className="w-full flex justify-between items-start z-10 px-2 mb-4">
+      <div className="w-full flex justify-between items-start z-10 mb-4">
          {/* Left Stat */}
          <div className="flex flex-col items-start drop-shadow-sm">
             <div className="text-[28px] font-bold font-mono text-[var(--background)] tracking-tighter leading-none">

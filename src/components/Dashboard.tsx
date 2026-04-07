@@ -54,7 +54,7 @@ export default function Dashboard() {
         </div>
 
         {/* Render the stylized Tech Node map of Australia directly below the text */}
-        <div className="px-6 w-full text-[var(--background)] border-[var(--background)] z-10">
+        <div className="w-full text-[var(--background)] z-10 px-2">
           <AustraliaMap />
         </div>
       </div>
