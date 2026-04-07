@@ -18,9 +18,9 @@ export function PowerGauge({ mwSpring }: { mwSpring: MotionValue<number> }) {
   const dashOffset = useTransform(mwSpring, [0, MAX_MW], [semiCircumference, 0]);
 
   // Derived strings for UI
-  const displayMW = useTransform(mwSpring, v => v.toFixed(1));
+  const displayMW = useTransform(mwSpring, v => v.toFixed(2));
   const loadPercent = useTransform(mwSpring, [0, MAX_MW], [0, 100]);
-  const displayLoad = useTransform(loadPercent, v => `${Math.round(v)}%`);
+  const displayLoad = useTransform(loadPercent, v => `${v.toFixed(2)}%`);
   
   // Dynamic color for text based on load (red if over 90%)
   const loadColor = useTransform(loadPercent, v => v > 90 ? '#FF2A2A' : '#00E5FF');

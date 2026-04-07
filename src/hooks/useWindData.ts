@@ -51,10 +51,13 @@ export function useWindData() {
         const hnoise = (Math.random() - 0.5) * 5.0; // Significant jitter for graphical movement
         const wave = Math.sin(timeStep * 3) * 6; // Quick oscillating pattern
         
+        const eff = Math.min(100, Math.max(0, 85 + wave + hnoise + (sineWave * 5)));
+        const ineff = Math.min(100, Math.max(0, Math.random() * 8 + (20 - (eff / 5)))); // Inversely volatile
+
         const next = [...prev, {
           time: new Date().toLocaleTimeString('en-US', { hour12: false, minute: '2-digit', second: '2-digit' }),
-          // Baseline of 85, heavily influenced by volatile sine and noise to make the chart highly dynamic
-          efficiency: Math.min(100, Math.max(0, 85 + wave + hnoise + (sineWave * 5)))
+          efficiency: eff,
+          inefficiency: ineff
         }];
         return next.slice(-6); 
       });

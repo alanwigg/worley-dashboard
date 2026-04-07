@@ -34,10 +34,25 @@ export function EfficiencyChart({ data }: { data: any[] }) {
                 <stop offset="5%" stopColor="var(--cyan-primary)" stopOpacity={0.6}/>
                 <stop offset="95%" stopColor="var(--cyan-primary)" stopOpacity={0}/>
                 </linearGradient>
+                <linearGradient id="colorIneff" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--alert-red)" stopOpacity={0.5}/>
+                <stop offset="95%" stopColor="var(--alert-red)" stopOpacity={0}/>
+                </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--grid)" vertical={true} horizontal={true} />
             <XAxis dataKey="time" stroke="var(--muted)" fontSize={8} tickMargin={5} axisLine={false} tickLine={false} />
             <YAxis stroke="var(--muted)" fontSize={8} tickCount={8} domain={[0, 100]} axisLine={false} tickLine={false} />
+            
+            <Area 
+                type="monotone" 
+                dataKey="inefficiency" 
+                stroke="var(--alert-red)" 
+                strokeWidth={1}
+                fillOpacity={1} 
+                fill="url(#colorIneff)" 
+                isAnimationActive={false}
+            />
+
             <Area 
                 type="monotone" 
                 dataKey="efficiency" 
@@ -47,6 +62,7 @@ export function EfficiencyChart({ data }: { data: any[] }) {
                 fill="url(#colorEff)" 
                 isAnimationActive={false}
             />
+            
             {/* Draw a vertical line for the last point */}
             <line x1="100%" y1="0" x2="100%" y2="100%" stroke="var(--green-primary)" strokeWidth="1" opacity="0.8" />
             </AreaChart>

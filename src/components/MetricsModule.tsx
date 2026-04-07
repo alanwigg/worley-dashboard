@@ -7,7 +7,7 @@ export function MetricsModule({ mwSpring, realWindSpeed = 24 }: { mwSpring: Moti
   
   // Grid Load Extracted Logic
   const loadPercent = useTransform(mwSpring, [0, MAX_MW], [0, 100]);
-  const displayLoad = useTransform(loadPercent, v => `${Math.round(v)}%`);
+  const displayLoad = useTransform(loadPercent, v => `${v.toFixed(2)}%`);
   const loadColor = useTransform(loadPercent, v => v > 90 ? 'var(--alert-red)' : 'var(--cyan-primary)');
   const alertText = useTransform(loadPercent, v => v > 90 ? 'CRITICAL' : 'NOMINAL');
 
@@ -21,7 +21,7 @@ export function MetricsModule({ mwSpring, realWindSpeed = 24 }: { mwSpring: Moti
   const displayWindSpeed = useTransform(windSpring, v => `${Math.round(v)}`);
 
   // Wind sock physically dropping/lifting based on the real wind speed
-  const sockRotation = useTransform(windSpring, [5, 48], ["80deg", "-5deg"]);
+  const sockRotation = useTransform(windSpring, [5, 24, 48], ["80deg", "-5deg", "-15deg"]);
   
   // Track high-wind state natively to trigger CSS flapping classes
   const [isHighWind, setIsHighWind] = useState(false);
