@@ -29,50 +29,35 @@ const TinyTurbine = ({ x, y, delay, scaleFactor = 1 }: { x: number, y: number, d
 
 export function AustraliaMap() {
   return (
-    // Height expanded from 300 to 380 to comfortably fit the extended bottom legend
-    <div className="relative w-full h-[380px] flex items-start justify-center mt-2">
+    // Switch to flex column without hardcoded absolute heights to allow natural document flow
+    <div className="w-full flex flex-col mt-4">
       
-      {/* Metric Stat positioned freely at top left */}
-      <div className="absolute top-0 left-0 flex flex-col items-start z-10 mt-2">
-         <div className="text-[28px] font-bold font-mono text-[var(--background)] tracking-tighter leading-none drop-shadow-sm">
-            114
+      {/* Header Metric Row */}
+      <div className="w-full flex justify-between items-start z-10 px-2 mb-4">
+         {/* Left Stat */}
+         <div className="flex flex-col items-start drop-shadow-sm">
+            <div className="text-[28px] font-bold font-mono text-[var(--background)] tracking-tighter leading-none">
+               114
+            </div>
+            <div className="flex flex-col items-start text-[7px] font-mono text-[var(--background)] uppercase tracking-widest pt-1 border-t border-[var(--background)]/40 mt-1 w-full text-left leading-tight opacity-80">
+               <span>Utility</span>
+               <span>Wind Farms</span>
+            </div>
          </div>
-         <div className="flex flex-col items-start text-[7px] font-mono text-[var(--background)] uppercase tracking-widest pt-1 border-t border-[var(--background)]/40 mt-1 w-full text-left leading-tight opacity-80">
-            <span>Utility</span>
-            <span>Wind Farms</span>
-         </div>
-      </div>
-
-      {/* Map Legend / Key separated far below and to the left */}
-      <div className="absolute bottom-0 left-0 flex items-center gap-6 z-10 opacity-80 bg-[var(--cyan-primary)] p-3 px-4 rounded-md shadow-lg border border-[var(--background)]/20">
-         <div className="flex items-center gap-3">
-             <svg width="12" height="15" viewBox="-8 -8 20 25" className="overflow-visible">
-                <TinyTurbine x={0} y={5} delay={0} scaleFactor={0.8} />
-             </svg>
-             <div className="text-[10px] font-mono text-[var(--background)] tracking-widest leading-none mt-1">
-                &lt;20 <span className="text-[8px] opacity-70">UNITS</span>
-             </div>
-         </div>
-         <div className="flex items-center gap-3 border-l border-[var(--background)]/30 pl-4">
-             <svg width="12" height="20" viewBox="-8 -8 20 25" className="overflow-visible">
-                <TinyTurbine x={0} y={5} delay={0} scaleFactor={1.2} />
-             </svg>
-             <div className="text-[10px] font-mono text-[var(--background)] tracking-widest leading-none mt-1">
-                +20 <span className="text-[8px] opacity-70">UNITS</span>
-             </div>
-         </div>
-         <div className="flex items-center gap-3 border-l border-[var(--background)]/30 pl-4">
-             <svg width="12" height="26" viewBox="-8 -8 20 30" className="overflow-visible">
-                <TinyTurbine x={0} y={5} delay={0} scaleFactor={1.8} />
-             </svg>
-             <div className="text-[10px] font-mono text-[var(--background)] font-bold tracking-widest leading-none mt-1">
-                LARGE 40+
-             </div>
+         {/* Right Stat */}
+         <div className="flex flex-col items-end drop-shadow-sm text-right">
+            <div className="text-[28px] font-bold font-mono text-[var(--background)] tracking-tighter leading-none">
+               3,842
+            </div>
+            <div className="flex flex-col items-end text-[7px] font-mono text-[var(--background)] uppercase tracking-widest pt-1 border-t border-[var(--background)]/40 mt-1 w-full text-right leading-tight opacity-80">
+               <span>Active</span>
+               <span>Turbines</span>
+            </div>
          </div>
       </div>
 
       {/* Increased viewBox and adjusted negative space so Tasmania renders perfectly without cutoff */}
-      <svg width="100%" height="100%" viewBox="0 0 100 90" className="opacity-100 overflow-visible mt-6 drop-shadow-xl">
+      <svg width="100%" height="auto" viewBox="0 0 100 90" className="opacity-100 overflow-visible mt-2 drop-shadow-xl min-h-[250px]">
          <defs>
            <filter id="landShadow">
              <feDropShadow dx="-2" dy="2" stdDeviation="3" floodColor="rgba(0,0,0,0.4)" floodOpacity="0.8"/>
@@ -117,6 +102,35 @@ export function AustraliaMap() {
          <TinyTurbine x={78} y={80} delay={0.5} scaleFactor={0.9} />
          
       </svg>
+
+      {/* Map Legend / Key structurally rendered strictly underneath map */}
+      <div className="w-full flex items-center justify-start gap-4 z-10 opacity-80 bg-[var(--cyan-primary)] p-3 px-4 rounded-md shadow-lg border border-[var(--background)]/20 mt-6 lg:mt-8 mb-4">
+         <div className="flex items-center gap-3">
+             <svg width="12" height="15" viewBox="-8 -8 20 25" className="overflow-visible">
+                <TinyTurbine x={0} y={5} delay={0} scaleFactor={0.8} />
+             </svg>
+             <div className="text-[10px] font-mono text-[var(--background)] tracking-widest leading-none mt-1">
+                &lt;20 <span className="text-[8px] opacity-70">UNITS</span>
+             </div>
+         </div>
+         <div className="flex items-center gap-3 border-l border-[var(--background)]/30 pl-4">
+             <svg width="12" height="20" viewBox="-8 -8 20 25" className="overflow-visible">
+                <TinyTurbine x={0} y={5} delay={0} scaleFactor={1.2} />
+             </svg>
+             <div className="text-[10px] font-mono text-[var(--background)] tracking-widest leading-none mt-1">
+                +20 <span className="text-[8px] opacity-70">UNITS</span>
+             </div>
+         </div>
+         <div className="flex items-center gap-3 border-l border-[var(--background)]/30 pl-4">
+             <svg width="12" height="26" viewBox="-8 -8 20 30" className="overflow-visible">
+                <TinyTurbine x={0} y={5} delay={0} scaleFactor={1.8} />
+             </svg>
+             <div className="text-[10px] font-mono text-[var(--background)] font-bold tracking-widest leading-none mt-1">
+                LARGE 40+
+             </div>
+         </div>
+      </div>
+
     </div>
   );
 }
