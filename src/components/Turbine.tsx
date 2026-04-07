@@ -11,7 +11,7 @@ const STROKE_COLOR = "#faf8ef"; // Ivory Oasis
 const CYAN_COLOR = "#29c8c1"; // Sky Mist
 const RED_COLOR = "#f43a4f"; // Scorched Rose
 
-function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isMobile: boolean }) {
+function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<number>, isMobile: boolean, isHovered: boolean }) {
   const bladesRef = useRef<THREE.Group>(null);
   const gearsRef = useRef<THREE.Group>(null);
   const turbineRootRef = useRef<THREE.Group>(null);
@@ -19,6 +19,9 @@ function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isM
 
   const speedMultiplier = useTransform(mwValue, [0, 10], [0.005, 0.04]);
   const redIntensity = useTransform(mwValue, [7, 10], [0.2, 1.0]);
+
+  // Independent vector tracking enables smooth mechanical realignment back to base zero
+  const pointerTrack = useRef({ x: 0, y: 0 });
 
   useFrame((state, delta) => {
     const rotSpeed = speedMultiplier.get() * (delta * 60);
@@ -35,13 +38,24 @@ function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isM
     
     // Desktop Tracking - Anchor at the base and swing the entire tower like a joystick! 
     if (!isMobile && turbineRootRef.current) {
-      // Create a smooth continuous baseline rotation like OrbitControls autoRotate
-      const absoluteAutoRotate = state.clock.getElapsedTime() * 0.25;
+      
+      // If the mouse is physically engaged in the frame, aggressively follow the coordinates.
+      // If abandoned, mechanically drift the internal mathematical tracking back to absolute zero (vertical center)
+      if (isHovered) {
+         pointerTrack.current.x = THREE.MathUtils.lerp(pointerTrack.current.x, state.pointer.x, 0.1);
+         pointerTrack.current.y = THREE.MathUtils.lerp(pointerTrack.current.y, state.pointer.y, 0.1);
+      } else {
+         pointerTrack.current.x = THREE.MathUtils.lerp(pointerTrack.current.x, 0, 0.03);
+         pointerTrack.current.y = THREE.MathUtils.lerp(pointerTrack.current.y, 0, 0.03);
+      }
+
+      // Create a smooth continuous baseline rotation like OrbitControls autoRotate (Slowed 10% per user request)
+      const absoluteAutoRotate = state.clock.getElapsedTime() * 0.22;
       
       // Pointer offset gives the user interactive localized control over the continuous rotation
-      const targetYaw = absoluteAutoRotate + (state.pointer.x * 0.8); 
-      const targetPitch = state.pointer.y * -0.08; // Dramatically reduced vertical tilt 
-      const targetRoll = state.pointer.x * -0.04;  // Dramatically reduced lateral lean
+      const targetYaw = absoluteAutoRotate + (pointerTrack.current.x * 0.8); 
+      const targetPitch = pointerTrack.current.y * -0.08; // Structural pitch centers effortlessly to 0 when abandoned
+      const targetRoll = pointerTrack.current.x * -0.04; 
       
       turbineRootRef.current.rotation.y += (targetYaw - turbineRootRef.current.rotation.y) * 0.08;
       turbineRootRef.current.rotation.x += (targetPitch - turbineRootRef.current.rotation.x) * 0.08;
@@ -210,6 +224,8 @@ function FlowLines({ mwValue }: { mwValue: MotionValue<number> }) {
 
 export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
@@ -218,7 +234,11 @@ export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
   }, []);
 
   return (
-    <div className={`relative w-full h-[500px] lg:h-[750px] flex flex-col items-center justify-center ${isMobile ? 'cursor-grab active:cursor-grabbing' : ''}`}>
+    <div 
+      onPointerEnter={() => setIsHovered(true)}
+      onPointerLeave={() => setIsHovered(false)}
+      className={`relative w-full h-[500px] lg:h-[750px] flex flex-col items-center justify-center ${isMobile ? 'cursor-grab active:cursor-grabbing' : ''}`}
+    >
       {/* Background ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[var(--cyan-primary)] rounded-full blur-[140px] opacity-10 pointer-events-none z-0" />
 
@@ -226,7 +246,7 @@ export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
       <Canvas camera={{ position: [10, 3, 11], fov: 45 }} style={{ zIndex: 10 }}>
         <ambientLight intensity={1} />
         <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.1}>
-          <TurbineModel mwValue={mwValue} isMobile={isMobile} />
+          <TurbineModel mwValue={mwValue} isMobile={isMobile} isHovered={isHovered} />
         </Float>
         
         {/* Strictly inject tactile OrbitControls natively back on Mobile grids for swipe functionality! */}
