@@ -14,7 +14,7 @@ const RED_COLOR = "#f43a4f"; // Scorched Rose
 function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isMobile: boolean }) {
   const bladesRef = useRef<THREE.Group>(null);
   const gearsRef = useRef<THREE.Group>(null);
-  const nacelleRef = useRef<THREE.Group>(null);
+  const turbineRootRef = useRef<THREE.Group>(null);
   const motorGradientRef = useRef<THREE.MeshBasicMaterial>(null);
 
   const speedMultiplier = useTransform(mwValue, [0, 10], [0.005, 0.04]);
@@ -33,13 +33,17 @@ function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isM
       motorGradientRef.current.opacity = redIntensity.get();
     }
     
-    // Desktop Nacelle Tracking - the nose physically swivels to follow the cursor!
-    if (!isMobile && nacelleRef.current) {
-      const targetYaw = state.pointer.x * -1.2; // Left/Right Swivel
-      const targetPitch = state.pointer.y * -0.4; // Subtle Up/Down Tilt
+    // Desktop Tracking - Anchor at the base and swing the entire tower like a joystick! 
+    if (!isMobile && turbineRootRef.current) {
+      // Positive pointer = Right/Up. Positive Yaw swings nose to the right. 
+      // Negative Pitch pulls the nose up to gaze into the sky towards the cursor.
+      const targetYaw = state.pointer.x * 1.5; 
+      const targetPitch = state.pointer.y * -0.3;
+      const targetRoll = state.pointer.x * -0.1; // Very subtle structural lean
       
-      nacelleRef.current.rotation.y += (targetYaw - nacelleRef.current.rotation.y) * 0.05;
-      nacelleRef.current.rotation.x += (targetPitch - nacelleRef.current.rotation.x) * 0.05;
+      turbineRootRef.current.rotation.y += (targetYaw - turbineRootRef.current.rotation.y) * 0.08;
+      turbineRootRef.current.rotation.x += (targetPitch - turbineRootRef.current.rotation.x) * 0.08;
+      turbineRootRef.current.rotation.z += (targetRoll - turbineRootRef.current.rotation.z) * 0.08;
     }
   });
 
@@ -47,7 +51,8 @@ function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isM
   const posY = isMobile ? -2.2 : -3.8;
 
   return (
-    <group position={[0, posY, 0]} scale={scale}>
+    // Attach the ref directly to the master root structure. The 0,0,0 local origin maps flawlessly to the floor socket!
+    <group ref={turbineRootRef} position={[0, posY, 0]} scale={scale}>
       {/* High speed air speckles floating off the whole structure */}
       <Sparkles count={50} scale={[4, 4, 8]} position={[0, 4, -2]} size={1.5} speed={0.4} color={CYAN_COLOR} opacity={0.25} />
 
@@ -65,8 +70,8 @@ function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isM
         <Edges color={STROKE_COLOR} threshold={15} />
       </mesh>
 
-      {/* Hub & Nacelle - Ref attached here to allow the whole top section to physically turn! */}
-      <group ref={nacelleRef} position={[0, 4.2, 0.4]}>
+      {/* Hub & Nacelle */}
+      <group position={[0, 4.2, 0.4]}>
 
         {/* Nacelle Main Body (Front Half) - Sky Mist */}
         <mesh position={[0, 0, -0.6]} rotation={[Math.PI / 2, 0, 0]}>
