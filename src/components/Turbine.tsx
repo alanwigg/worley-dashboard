@@ -139,7 +139,7 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
         {/* Precision mapped Worley imprint Texture mapped onto a physical Circle Geometry capping the rear cylinder face */}
         {/* Re-anchored to the absolute Z plane (-2.002) to explicitly bypass local cylinder rotation bugs */}
         <mesh position={[0, 0, -2.002]} rotation={[0, Math.PI, 0]}>
-          <circleGeometry args={[0.26, 32]} />
+          <circleGeometry args={[0.325, 32]} />
           {/* Hardware alphaTest strictly purges transparent sorting bugs against the translucent red motor housing */}
           <meshBasicMaterial map={logoTexture} transparent alphaTest={0.1} color="#FFFFFF" />
         </mesh>
