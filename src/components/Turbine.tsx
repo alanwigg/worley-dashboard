@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Float, Edges, Trail, Sparkles } from '@react-three/drei';
+import { OrbitControls, Float, Edges, Trail, Sparkles, Html } from '@react-three/drei';
 import { MotionValue, useTransform, motion } from 'framer-motion';
 import * as THREE from 'three';
 
@@ -133,6 +133,13 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
           <cylinderGeometry args={[0.55, 0.45, 0.8, 24]} />
           <meshBasicMaterial ref={motorGradientRef} color={RED_COLOR} transparent />
           <Edges color={STROKE_COLOR} />
+          
+          {/* Precision mapped Worley imprint Decal onto the flat backing - Math.PI/2 rotation anchors it flush with the cylinder disc */}
+          <Html position={[0, -0.405, 0]} rotation={[-Math.PI / 2, 0, 0]} transform center pointerEvents="none">
+             <div className="w-[85px] h-[85px] opacity-90 drop-shadow-md flex justify-center items-center">
+                <img src="/worley-imprint.svg" alt="Worley Imprint" className="w-[85%] h-[85%] object-contain" />
+             </div>
+          </Html>
         </mesh>
 
         {/* Nose Dome Bulb */}
