@@ -35,11 +35,13 @@ function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isM
     
     // Desktop Tracking - Anchor at the base and swing the entire tower like a joystick! 
     if (!isMobile && turbineRootRef.current) {
-      // Positive pointer = Right/Up. Positive Yaw swings nose to the right. 
-      // Negative Pitch pulls the nose up to gaze into the sky towards the cursor.
-      const targetYaw = state.pointer.x * 1.5; 
-      const targetPitch = state.pointer.y * -0.3;
-      const targetRoll = state.pointer.x * -0.1; // Very subtle structural lean
+      // Create a smooth continuous baseline rotation like OrbitControls autoRotate
+      const absoluteAutoRotate = state.clock.getElapsedTime() * 0.25;
+      
+      // Pointer offset gives the user interactive localized control over the continuous rotation
+      const targetYaw = absoluteAutoRotate + (state.pointer.x * 0.8); 
+      const targetPitch = state.pointer.y * -0.08; // Dramatically reduced vertical tilt 
+      const targetRoll = state.pointer.x * -0.04;  // Dramatically reduced lateral lean
       
       turbineRootRef.current.rotation.y += (targetYaw - turbineRootRef.current.rotation.y) * 0.08;
       turbineRootRef.current.rotation.x += (targetPitch - turbineRootRef.current.rotation.x) * 0.08;
