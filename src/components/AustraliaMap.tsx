@@ -1,8 +1,8 @@
 "use client";
 import React from 'react';
 
-const TinyTurbine = ({ x, y, delay }: { x: number, y: number, delay: number }) => (
-  <g transform={`translate(${x}, ${y}) scale(0.3)`}>
+const TinyTurbine = ({ x, y, delay, scaleFactor = 1 }: { x: number, y: number, delay: number, scaleFactor?: number }) => (
+  <g transform={`translate(${x}, ${y}) scale(${0.3 * scaleFactor})`}>
     {/* Sun cast shadow extended heavily to the left */}
     <ellipse cx="-12" cy="14" rx="14" ry="2" fill="rgba(0,0,0,0.5)" transform="rotate(15, -12, 14)" />
 
@@ -32,21 +32,31 @@ export function AustraliaMap() {
       {/* Metric Stat positioned freely at top left */}
       <div className="absolute -top-4 left-4 flex flex-col items-start z-10">
          <div className="text-[28px] font-bold font-mono text-[var(--background)] tracking-tighter leading-none drop-shadow-sm">
-            3,842
+            114
          </div>
          <div className="flex flex-col items-start text-[7px] font-mono text-[var(--background)] uppercase tracking-widest pt-1 border-t border-[var(--background)]/40 mt-1 w-full text-left leading-tight opacity-80">
-            <span>Active</span>
-            <span>Turbines</span>
+            <span>Utility</span>
+            <span>Wind Farms</span>
          </div>
       </div>
 
       {/* Map Legend / Key */}
-      <div className="absolute bottom-6 left-4 flex items-center gap-2 z-10 opacity-80 bg-[var(--cyan-primary)] p-2 rounded-md shadow-lg border border-[var(--background)]/20">
-         <svg width="12" height="15" viewBox="-10 -10 20 25" className="overflow-visible">
-            <TinyTurbine x={0} y={0} delay={0} />
-         </svg>
-         <div className="text-[9px] font-mono text-[var(--background)] font-bold tracking-widest leading-none">
-            = 250 UNITS
+      <div className="absolute bottom-6 left-4 flex flex-col gap-3 z-10 opacity-80 bg-[var(--cyan-primary)] p-3 rounded-md shadow-lg border border-[var(--background)]/20">
+         <div className="flex items-center gap-4">
+             <svg width="15" height="15" viewBox="-10 -10 20 25" className="overflow-visible">
+                <TinyTurbine x={2} y={5} delay={0} scaleFactor={0.8} />
+             </svg>
+             <div className="text-[9px] font-mono text-[var(--background)] font-bold tracking-widest leading-none mt-1">
+                LOW VOL
+             </div>
+         </div>
+         <div className="flex items-center gap-4">
+             <svg width="15" height="22" viewBox="-10 -10 20 25" className="overflow-visible">
+                <TinyTurbine x={2} y={5} delay={0} scaleFactor={1.8} />
+             </svg>
+             <div className="text-[9px] font-mono text-[var(--background)] font-bold tracking-widest leading-none mt-1">
+                HIGH VOL
+             </div>
          </div>
       </div>
 
@@ -72,32 +82,29 @@ export function AustraliaMap() {
          <line x1="15" y1="50" x2="60" y2="25" stroke="var(--background)" strokeWidth="0.5" opacity="0.3" />
          <line x1="30" y1="40" x2="80" y2="80" stroke="var(--background)" strokeWidth="0.5" opacity="0.3" />
 
-         {/* Turbines manually mapped into generic 2D coordinate space */}
-         {/* West Coast / WA */}
-         <TinyTurbine x={18} y={48} delay={0.2} />
-         <TinyTurbine x={12} y={55} delay={0.6} />
-         <TinyTurbine x={15} y={35} delay={0.1} />
-         <TinyTurbine x={22} y={25} delay={0.8} />
+         {/* Scaled Volume Farm Mapping per Regional Data */}
+         {/* WA (18 Farms - Medium) */}
+         <TinyTurbine x={18} y={48} delay={0.2} scaleFactor={1.0} />
+         <TinyTurbine x={12} y={55} delay={0.6} scaleFactor={0.8} />
 
-         {/* South Coast / SA / VIC */}
-         <TinyTurbine x={35} y={60} delay={0.6} /> 
-         <TinyTurbine x={45} y={62} delay={0.3} /> 
-         <TinyTurbine x={55} y={65} delay={0.9} /> 
+         {/* SA (24 Farms - Very High Volume) */}
+         <TinyTurbine x={35} y={60} delay={0.6} scaleFactor={1.5} /> 
+         <TinyTurbine x={44} y={62} delay={0.3} scaleFactor={1.2} /> 
 
-         {/* East Coast / NSW / QLD */}
-         <TinyTurbine x={65} y={45} delay={0.7} />
-         <TinyTurbine x={72} y={55} delay={0.1} />
-         <TinyTurbine x={80} y={30} delay={0.3} />
-         <TinyTurbine x={70} y={20} delay={0.5} />
-         <TinyTurbine x={60} y={10} delay={0.4} />
+         {/* VIC (35 Farms - HIGHEST DENSITY CORRIDOR) */}
+         <TinyTurbine x={55} y={65} delay={0.9} scaleFactor={2.0} /> 
 
-         {/* Inland Corridors */}
-         <TinyTurbine x={42} y={40} delay={0.8} />
-         <TinyTurbine x={52} y={35} delay={0.2} />
+         {/* NSW & ACT (15 Farms - High Growth) */}
+         <TinyTurbine x={65} y={45} delay={0.7} scaleFactor={1.4} />
+         <TinyTurbine x={72} y={55} delay={0.1} scaleFactor={1.0} />
 
-         {/* Tasmania Node! */}
-         <TinyTurbine x={78} y={80} delay={0.5} />
-         <TinyTurbine x={82} y={85} delay={0.9} />
+         {/* QLD (6 Farms - Growing) */}
+         <TinyTurbine x={70} y={20} delay={0.5} scaleFactor={0.7} />
+         <TinyTurbine x={60} y={10} delay={0.4} scaleFactor={0.6} />
+
+         {/* TAS (4 Farms - Strong Constant Output) */}
+         <TinyTurbine x={78} y={80} delay={0.5} scaleFactor={0.9} />
+         
       </svg>
     </div>
   );
