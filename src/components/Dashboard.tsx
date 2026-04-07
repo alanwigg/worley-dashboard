@@ -28,9 +28,10 @@ export default function Dashboard() {
     <div className="w-full max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 pt-4 px-6 md:px-12 relative overflow-hidden min-h-[calc(100vh-75px)]">
 
       {/* Left Column - Contextual Text */}
-      <div className="relative flex-1 flex flex-col gap-4 items-start text-left z-50 w-full max-w-sm">
-        {/* Infinite Left & Vertical Sky Mist Background - Square Edges */}
-        <div className="absolute -top-[100vh] -bottom-[100vh] -left-[100vw] right-[-2rem] bg-[var(--cyan-primary)] opacity-95 backdrop-blur-md -z-10 shadow-2xl" />
+      <div className="relative flex-1 flex flex-col gap-4 items-start text-left z-50 w-full lg:max-w-sm">
+        {/* Infinite Left & Vertical Sky Mist Background - Square Edges 
+            (Constrained to just cover itself on Mobile, infinite vertical on Desktop) */}
+        <div className="absolute -top-[100vh] -bottom-16 lg:-bottom-[100vh] -left-[100vw] right-[-2rem] bg-[var(--cyan-primary)] opacity-95 backdrop-blur-md -z-10 shadow-2xl" />
 
         <div className="p-2 pb-2 relative text-[var(--background)]">
           <h2 className="text-[var(--background)] opacity-70 text-sm tracking-[0.2em] mb-4 uppercase font-bold border-l-2 border-[var(--background)] pl-4">
@@ -48,24 +49,31 @@ export default function Dashboard() {
         </div>
 
         {/* Render the stylized Tech Node map of Australia directly below the text */}
-        <div className="px-6 w-full text-[var(--background)] border-[var(--background)]">
+        <div className="px-6 w-full text-[var(--background)] border-[var(--background)] z-10">
           <AustraliaMap />
         </div>
       </div>
 
       {/* Center Visualization */}
-      <div className="flex-[1.5] flex justify-center items-center w-full z-10 relative mt-4 md:mt-0 translate-x-[35px]">
+      <div className="flex-[1.5] flex justify-center items-center w-full z-10 relative mt-16 lg:mt-0 translate-x-0 lg:translate-x-[35px]">
         <Turbine mwValue={mwSpring} />
       </div>
 
       {/* Right Column - Data Vis */}
-      <div className="flex-1 flex flex-col items-center md:items-end text-right z-50 w-full max-w-sm p-4 pt-4">
-        <div className="w-full mb-12 relative flex flex-col items-center gap-4">
-          <PowerGauge mwSpring={mwSpring} />
-          <MetricsModule mwSpring={mwSpring} />
-          <div className="w-full mt-8 bg-[var(--background)]/20 backdrop-blur-xl p-6 rounded-xl shadow-2xl border border-white/10">
+      <div className="flex-1 flex flex-col items-center lg:items-end text-right z-50 w-full lg:max-w-sm p-4 pt-10 lg:pt-4">
+        <div className="w-full mb-12 relative flex flex-col items-center gap-6">
+          
+          {/* Top Metrics Glass Container */}
+          <div className="w-full flex flex-col items-center gap-4 bg-[var(--background)]/30 backdrop-blur-xl p-6 rounded-xl shadow-2xl border border-white/10">
+            <PowerGauge mwSpring={mwSpring} />
+            <MetricsModule mwSpring={mwSpring} />
+          </div>
+
+          {/* Efficiency Chart Glass Container */}
+          <div className="w-full mt-2 bg-[var(--background)]/30 backdrop-blur-xl p-6 rounded-xl shadow-2xl border border-white/10">
             <EfficiencyChart data={history} />
           </div>
+          
         </div>
       </div>
 
