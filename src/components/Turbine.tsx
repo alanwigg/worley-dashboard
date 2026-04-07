@@ -34,7 +34,7 @@ function TurbineModel({ mwValue }: { mwValue: MotionValue<number> }) {
   });
 
   return (
-    <group position={[0, -3.2, 0]} scale={1.05}>
+    <group position={[0, -3.8, 0]} scale={1.35}>
       {/* High speed air speckles floating off the whole structure */}
       <Sparkles count={50} scale={[4, 4, 8]} position={[0, 4, -2]} size={1.5} speed={0.4} color={CYAN_COLOR} opacity={0.25} />
 
@@ -195,7 +195,7 @@ export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[var(--cyan-primary)] rounded-full blur-[140px] opacity-10 pointer-events-none z-0" />
 
       {/* 3D Canvas Context */}
-      <Canvas camera={{ position: [11, 4, 13], fov: 60 }} style={{ zIndex: 10 }}>
+      <Canvas camera={{ position: [10, 3, 11], fov: 45 }} style={{ zIndex: 10 }}>
         <ambientLight intensity={1} />
         <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.1}>
           <TurbineModel mwValue={mwValue} />
