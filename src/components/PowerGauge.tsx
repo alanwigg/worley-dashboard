@@ -36,9 +36,9 @@ export function PowerGauge({ mwSpring }: { mwSpring: MotionValue<number> }) {
   const loadColor = useTransform(loadPercent, v => v > 90 ? '#FF2A2A' : '#00E5FF');
 
   return (
-    <div className="relative w-[300px] h-[220px] flex flex-col items-start">
+    <div className="relative w-[300px] h-[220px] flex flex-col items-center">
       {/* Container Title */}
-      <div className="absolute top-0 left-0 text-[var(--foreground)] text-sm font-bold uppercase tracking-widest w-full pb-1 text-left">
+      <div className="absolute top-0 left-0 w-full text-[var(--foreground)] text-sm font-bold uppercase tracking-widest pb-1 text-center">
         Critical Metrics
       </div>
 
