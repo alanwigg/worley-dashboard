@@ -225,6 +225,7 @@ function FlowLines({ mwValue }: { mwValue: MotionValue<number> }) {
 export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const interactionTimeoutRef = useRef<NodeJS.Timeout>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -233,10 +234,22 @@ export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  const handlePointerEnter = () => {
+    if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+    setIsHovered(true);
+  };
+
+  const handlePointerLeave = () => {
+    // Inject a 3-second mechanical hold delay before gravity correction engages
+    interactionTimeoutRef.current = setTimeout(() => {
+      setIsHovered(false);
+    }, 3000);
+  };
+
   return (
     <div 
-      onPointerEnter={() => setIsHovered(true)}
-      onPointerLeave={() => setIsHovered(false)}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
       className={`relative w-full h-[500px] lg:h-[750px] flex flex-col items-center justify-center ${isMobile ? 'cursor-grab active:cursor-grabbing' : ''}`}
     >
       {/* Background ambient glow */}
