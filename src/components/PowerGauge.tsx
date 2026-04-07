@@ -1,5 +1,6 @@
 "use client";
-import { motion, useTransform, MotionValue } from 'framer-motion';
+import { useEffect } from 'react';
+import { motion, useTransform, MotionValue, useSpring } from 'framer-motion';
 
 export function PowerGauge({ mwSpring }: { mwSpring: MotionValue<number> }) {
   // The gauge maps 0 -> 10 MW to a stroke dashoffset.
@@ -16,6 +17,15 @@ export function PowerGauge({ mwSpring }: { mwSpring: MotionValue<number> }) {
   // If MW = 0, offset = semiCircumference (empty)
   // If MW = 10, offset = 0 (full)
   const dashOffset = useTransform(mwSpring, [0, MAX_MW], [semiCircumference, 0]);
+
+  // Secondary ultra-volatile spring representing real-time raw turbine micro-fluctuations
+  const volatileSpring = useSpring(0, { stiffness: 150, damping: 5, mass: 0.5 });
+  useEffect(() => {
+    return mwSpring.on('change', v => {
+        // Constantly jitter around the stabilized master value
+        volatileSpring.set(Math.max(0, v + (Math.random() * 1.8 - 0.9)));
+    });
+  }, [mwSpring, volatileSpring]);
 
   // Derived strings for UI
   const displayMW = useTransform(mwSpring, v => v.toFixed(2));
@@ -61,6 +71,20 @@ export function PowerGauge({ mwSpring }: { mwSpring: MotionValue<number> }) {
           const y2 = 170 - Math.sin(rad) * 140;
           return <line key={angle} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--grid)" strokeWidth="1" />;
         })}
+
+        {/* ULTRA-VOLATILE SENSITIVITY ARC OUTSIDE MAIN ARC */}
+        <motion.path 
+          d="M 35,170 A 115,115 0 0,1 265,170" 
+          fill="none" 
+          stroke="var(--cyan-primary)" 
+          strokeWidth="2" 
+          strokeLinecap="round"
+          strokeDasharray="361.28 1000"
+          style={{ 
+             strokeDashoffset: useTransform(volatileSpring, [0, MAX_MW], [361.28, 0]),
+             opacity: 0.8
+          }}
+        />
 
         {/* Background Track Arc */}
         <path d="M 50,170 A 100,100 0 0,1 250,170" fill="none" stroke="var(--surface)" strokeWidth="16" />

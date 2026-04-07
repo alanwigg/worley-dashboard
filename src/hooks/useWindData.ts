@@ -34,11 +34,12 @@ export function useWindData() {
   useEffect(() => {
     let tickMW = BASE_MW;
     let timeStep = 0;
+    let lastHistoryUpdate = Date.now();
 
     const interval = setInterval(() => {
-      // Create a smooth pseudo-sine wave random walk
-      timeStep += 0.2;
-      const noise = (Math.random() - 0.5) * 0.4;
+      // micro-steps for extreme fluidity (10 frames a second)
+      timeStep += 0.04;
+      const noise = (Math.random() - 0.5) * 0.15;
       const sineWave = Math.sin(timeStep) * 0.6;
       
       const newMW = BASE_MW + sineWave + noise;
@@ -46,23 +47,27 @@ export function useWindData() {
 
       setTargetMW(tickMW);
 
-      // Add to history with high mechanical volatility
-      setHistory(prev => {
-        const hnoise = (Math.random() - 0.5) * 5.0; // Significant jitter for graphical movement
-        const wave = Math.sin(timeStep * 3) * 6; // Quick oscillating pattern
-        
-        const eff = Math.min(100, Math.max(0, 85 + wave + hnoise + (sineWave * 5)));
-        const ineff = Math.min(100, Math.max(0, Math.random() * 8 + (20 - (eff / 5)))); // Inversely volatile
+      const now = Date.now();
+      // Only commit payload memory to the history chart every 3 seconds to avoid visual lightspeed
+      if (now - lastHistoryUpdate >= 3000) {
+        lastHistoryUpdate = now;
+        setHistory(prev => {
+          const hnoise = (Math.random() - 0.5) * 5.0; 
+          const wave = Math.sin(timeStep * 3) * 6; 
+          
+          const eff = Math.min(100, Math.max(0, 85 + wave + hnoise + (sineWave * 5)));
+          const ineff = Math.min(100, Math.max(0, Math.random() * 8 + (20 - (eff / 5))));
 
-        const next = [...prev, {
-          time: new Date().toLocaleTimeString('en-US', { hour12: false, minute: '2-digit', second: '2-digit' }),
-          efficiency: eff,
-          inefficiency: ineff
-        }];
-        return next.slice(-6); 
-      });
+          const next = [...prev, {
+            time: new Date().toLocaleTimeString('en-US', { hour12: false, minute: '2-digit', second: '2-digit' }),
+            efficiency: eff,
+            inefficiency: ineff
+          }];
+          return next.slice(-6); 
+        });
+      }
 
-    }, 3000);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
