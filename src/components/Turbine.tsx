@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Edges, Trail, Sparkles } from '@react-three/drei';
 import { MotionValue, useTransform, motion } from 'framer-motion';
@@ -15,6 +15,14 @@ function TurbineModel({ mwValue }: { mwValue: MotionValue<number> }) {
   const bladesRef = useRef<THREE.Group>(null);
   const gearsRef = useRef<THREE.Group>(null);
   const motorGradientRef = useRef<THREE.MeshBasicMaterial>(null);
+
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const speedMultiplier = useTransform(mwValue, [0, 10], [0.005, 0.04]);
   const redIntensity = useTransform(mwValue, [7, 10], [0.2, 1.0]);
@@ -33,8 +41,11 @@ function TurbineModel({ mwValue }: { mwValue: MotionValue<number> }) {
     }
   });
 
+  const scale = isMobile ? 0.8 : 1.35;
+  const posY = isMobile ? -2.5 : -3.8;
+
   return (
-    <group position={[0, -3.8, 0]} scale={1.35}>
+    <group position={[0, posY, 0]} scale={scale}>
       {/* High speed air speckles floating off the whole structure */}
       <Sparkles count={50} scale={[4, 4, 8]} position={[0, 4, -2]} size={1.5} speed={0.4} color={CYAN_COLOR} opacity={0.25} />
 
@@ -190,7 +201,7 @@ function FlowLines({ mwValue }: { mwValue: MotionValue<number> }) {
 
 export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
   return (
-    <div className="relative w-full h-[750px] cursor-grab active:cursor-grabbing flex flex-col items-center justify-center">
+    <div className="relative w-full h-[500px] lg:h-[750px] cursor-grab active:cursor-grabbing flex flex-col items-center justify-center">
       {/* Background ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[var(--cyan-primary)] rounded-full blur-[140px] opacity-10 pointer-events-none z-0" />
 
