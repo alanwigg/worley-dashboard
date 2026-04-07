@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useTransform, MotionValue, useSpring } from 'framer-motion';
 
-export function MetricsModule({ mwSpring, realWindSpeed = 24 }: { mwSpring: MotionValue<number>; realWindSpeed?: number }) {
+export function MetricsModule({ mwSpring, realWindSpeed = 24, aestTime = "00:00:00" }: { mwSpring: MotionValue<number>; realWindSpeed?: number; aestTime?: string }) {
   const MAX_MW = 10;
   
   // Grid Load Extracted Logic
@@ -32,9 +32,19 @@ export function MetricsModule({ mwSpring, realWindSpeed = 24 }: { mwSpring: Moti
   }, [windSpring]);
 
   return (
-    <div className="w-full max-w-[300px] flex gap-3 mt-4">
-       {/* GRID LOAD PANEL */}
+    <div className="w-full max-w-[360px] flex gap-3 mt-4">
+       {/* TIME PANEL */}
        <div className="flex-1 bg-[var(--surface)]/30 border border-[var(--grid)] p-3 rounded flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm">
+          <span className="text-[7px] text-[var(--muted)] uppercase tracking-widest font-mono mb-2 text-center leading-tight">Eastern<br/>Time</span>
+          <div className="flex items-center justify-center gap-2">
+             <div className="text-[14px] font-mono font-bold leading-none text-[#faf8ef] tracking-tighter">
+                {aestTime}
+             </div>
+          </div>
+       </div>
+
+       {/* GRID LOAD PANEL */}
+       <div className="flex-[1.2] bg-[var(--surface)]/30 border border-[var(--grid)] p-3 rounded flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm">
           <span className="text-[8px] text-[var(--muted)] uppercase tracking-widest font-mono mb-2">Grid Load</span>
           <motion.div className="text-xl font-mono font-bold leading-none mb-1" style={{ color: loadColor }}>
              <motion.span>{displayLoad}</motion.span>

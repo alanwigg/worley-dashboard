@@ -9,6 +9,7 @@ export function useWindData() {
   const [targetMW, setTargetMW] = useState(BASE_MW);
   const [history, setHistory] = useState<DataPoint[]>([]);
   const [realWindSpeed, setRealWindSpeed] = useState(24);
+  const [aestTime, setAestTime] = useState("");
 
   // Fetch real telemetry (Open-Meteo current wind speed for major Australian coastal windfarm coordinates)
   useEffect(() => {
@@ -32,18 +33,41 @@ export function useWindData() {
   }, []);
 
   useEffect(() => {
-    let tickMW = BASE_MW;
     let timeStep = 0;
     let lastHistoryUpdate = Date.now();
 
     const interval = setInterval(() => {
+      // 1. Process literal Australian Time
+      const options: Intl.DateTimeFormatOptions = { 
+        timeZone: 'Australia/Sydney', 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: false 
+      };
+      const sydneyTime = new Date().toLocaleTimeString('en-US', options);
+      setAestTime(sydneyTime);
+
+      // Extract raw integer hour to power the climate model
+      const currentHour = parseInt(sydneyTime.split(':')[0], 10);
+
+      // 2. Nocturnal Low-Level Jet Model
+      // Australian offshore wind generally hits extreme peaks in the dead of night (2 AM) 
+      // and troughs slightly during the mid-afternoon (2 PM) due to thermal ocean inversion
+      // Map 24h curve using cosine where peak is at H=2
+      const diurnalCurve = Math.cos((currentHour - 2) * (Math.PI / 12)); 
+      
+      // Amplification Scale: Drops baseline slightly during day, actively spikes it at night
+      const diurnalMWOffset = diurnalCurve > 0 ? (diurnalCurve * 1.8) : (diurnalCurve * 1.2);
+
       // micro-steps for extreme fluidity (10 frames a second)
       timeStep += 0.04;
       const noise = (Math.random() - 0.5) * 0.15;
       const sineWave = Math.sin(timeStep) * 0.6;
       
-      const newMW = BASE_MW + sineWave + noise;
-      tickMW = Math.max(0, newMW); 
+      // Inject physical time model into the base physics target engine
+      const newMW = BASE_MW + sineWave + noise + diurnalMWOffset;
+      const tickMW = Math.max(0, newMW); 
 
       setTargetMW(tickMW);
 
@@ -72,5 +96,5 @@ export function useWindData() {
     return () => clearInterval(interval);
   }, []);
 
-  return { targetMW, history, realWindSpeed };
+  return { targetMW, history, realWindSpeed, aestTime };
 }
