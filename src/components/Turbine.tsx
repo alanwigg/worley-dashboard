@@ -141,7 +141,7 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
                 <Edges color={STROKE_COLOR} threshold={10} />
 
                 {/* Visual Air Movement Trails emitting from the blade tip - Heavily thickened and lengthened */}
-                <Trail width={0.5} length={8} color={CYAN_COLOR} attenuation={(t) => t} local={false}>
+                <Trail width={1.2} length={3} color={CYAN_COLOR} attenuation={(t) => t} local={false}>
                   <mesh position={[0, 1.3, 0]}>
                     <boxGeometry args={[0.01, 0.01, 0.01]} />
                     <meshBasicMaterial transparent opacity={0} />
