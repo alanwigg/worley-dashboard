@@ -48,30 +48,33 @@ export function useWindData() {
       const sydneyTime = new Date().toLocaleTimeString('en-US', options);
       setAestTime(sydneyTime);
 
-      // Extract raw integer hour to power the climate model
-      const currentHour = parseInt(sydneyTime.split(':')[0], 10);
-
       // 2. Nocturnal Low-Level Jet Model
       // Australian offshore wind generally hits extreme peaks in the dead of night (2 AM) 
       // and troughs slightly during the mid-afternoon (2 PM) due to thermal ocean inversion
-      // Map 24h curve using cosine where peak is at H=2
-      const diurnalCurve = Math.cos((currentHour - 2) * (Math.PI / 12)); 
-      
-      // Amplification Scale: Drops baseline slightly during day, actively spikes it at night
-      const diurnalMWOffset = diurnalCurve > 0 ? (diurnalCurve * 1.8) : (diurnalCurve * 1.2);
-
-      // micro-steps for extreme fluidity (10 frames a second)
-      timeStep += 0.04;
-      const noise = (Math.random() - 0.5) * 0.15;
-      const sineWave = Math.sin(timeStep) * 0.6;
-      
-      // Inject physical time model into the base physics target engine
-      const newMW = BASE_MW + sineWave + noise + diurnalMWOffset;
-      const tickMW = Math.max(0, newMW); 
-
-      setTargetMW(tickMW);
-
+      // Base metric derived from constant offshore flow plus randomized micro-variances
+      const baseMW = 8.2;
       const now = Date.now();
+      const sineWave = Math.sin(now / 2000) * 0.5; // slow breathing waveform
+      
+      // Calculate a diurnal curve to map the AEST clock into a Nocturnal Low-Level Jet phenomenon
+      const hour = new Date().toLocaleTimeString('en-US', { timeZone: 'Australia/Sydney', hour: 'numeric', hour12: false });
+      const currentHour = parseInt(hour, 10);
+      
+      // Higher wind pressure between 10PM and 4AM
+      const isNight = currentHour >= 22 || currentHour <= 4;
+      const timeOfDay = isNight ? (currentHour >= 22 ? currentHour - 22 : currentHour + 2) / 6 : 0;
+      
+      // We scale it by 1.2 at night instead of 1.8 to prevent it breaching 10 MW
+      const diurnalCurve = isNight ? Math.sin(timeOfDay * Math.PI) * 1.2 : 0;
+      
+      const noise = (Math.random() - 0.5) * 0.05; // tiny micro stutter
+      let newMW = baseMW + sineWave + diurnalCurve + noise;
+      
+      // Hard clamp MW output to never exceed 9.98 specifically per user structural request
+      newMW = Math.max(6.0, Math.min(9.98, newMW)); 
+
+      setTargetMW(newMW);
+
       // Only commit payload memory to the history chart every 3 seconds to avoid visual lightspeed
       if (now - lastHistoryUpdate >= 3000) {
         lastHistoryUpdate = now;

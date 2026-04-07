@@ -16,8 +16,9 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
   const gearsRef = useRef<THREE.Group>(null);
   const turbineRootRef = useRef<THREE.Group>(null);
   const motorGradientRef = useRef<THREE.MeshBasicMaterial>(null);
+  const structuralGroup = useRef<THREE.Group>(null);
+  const accumulatedPhase = useRef(0);
 
-  const speedMultiplier = useTransform(mwValue, [0, 10], [0.005, 0.04]);
   const redIntensity = useTransform(mwValue, [7, 10], [0.2, 1.0]);
 
   // Independent vector tracking enables smooth mechanical realignment back to base zero
@@ -25,14 +26,26 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
   const permanentPhaseOffset = useRef(0); // Bakes abandoned rotational momentum permanently to prevent backwards snap-back
 
   useFrame((state, delta) => {
-    const rotSpeed = speedMultiplier.get() * (delta * 60);
+    const mwToRender = mwValue.get();
+    // Target speeds dynamically generated: 
+    // 8 MW = 1 rotation / 4s => Math.PI / 2 rads per sec
+    // 10 MW = 1 rotation / 2s => Math.PI rads per sec
+    // Using linear formula: y = m(x - 8) + c  -->  (PI/4)*(mw - 8) + PI/2
+    const clampedMW = Math.max(7, Math.min(10, mwToRender));
+    const targetVelocity = (Math.PI / 4) * (clampedMW - 8) + (Math.PI / 2);
+    
+    // Accumulate the rotational phase mathematically based on delta time
+    const rotationIncrement = targetVelocity * delta;
+    accumulatedPhase.current += rotationIncrement;
+
+    // Apply the absolute phase straight to the Z-axis of the physical parts
     if (bladesRef.current) {
-      bladesRef.current.rotation.z -= rotSpeed;
+        bladesRef.current.rotation.z = -accumulatedPhase.current;
     }
     if (gearsRef.current) {
-      // Gears spin faster for mechanical visual effect
-      gearsRef.current.rotation.z -= rotSpeed * 2.5;
+        gearsRef.current.rotation.z = -accumulatedPhase.current * 2.5;
     }
+
     if (motorGradientRef.current) {
       motorGradientRef.current.opacity = redIntensity.get();
     }
