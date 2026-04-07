@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #003645;
+  --surface: #002833;
+  --grid: #004d66;
+  --foreground: #faf8ef;
+  
+  --cyan-primary: #29c8c1;
+  --cyan-glow: rgba(41, 200, 193, 0.4);
+  --cyan-text: #00ffeb;
+  
+  --alert-red: #f43a4f;
+  --alert-red-glow: rgba(244, 58, 79, 0.4);
+  --alert-text: #f43a4f;
+
+  --green-primary: #81d10b;
+  --green-glow: rgba(129, 209, 11, 0.4);
+  
+  --muted: #8ca4b0;
+  --technical: #e0f2f1;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-grid: var(--grid);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  
+  --color-cyan-primary: var(--cyan-primary);
+  --color-cyan-glow: var(--cyan-glow);
+  --color-cyan-text: var(--cyan-text);
+  
+  --color-alert-red: var(--alert-red);
+  --color-alert-red-glow: var(--alert-red-glow);
+  --color-alert-text: var(--alert-text);
+
+  --color-green-primary: var(--green-primary);
+  --color-green-glow: var(--green-glow);
+  
+  --color-muted: var(--muted);
+  --color-technical: var(--technical);
+
+  --font-sans: Verdana, Geneva, Tahoma, sans-serif;
+  --font-mono: Verdana, Geneva, Tahoma, sans-serif;
+  
+  --animate-pulse-slow: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-flow-speed: flowBase 3s linear infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes flowBase {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
 }
 
 body {
   background: var(--background);
+  background-image: 
+    linear-gradient(to bottom, rgba(0, 54, 69, 0.05), rgba(0, 54, 69, 0.40)),
+    url('/bg-sunset.jpg');
+  background-size: cover;
+  background-position: right bottom;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
 }
