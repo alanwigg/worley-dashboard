@@ -41,8 +41,8 @@ function TurbineModel({ mwValue }: { mwValue: MotionValue<number> }) {
     }
   });
 
-  const scale = isMobile ? 0.60 : 1.35;
-  const posY = isMobile ? -2.0 : -3.8;
+  const scale = isMobile ? 0.95 : 1.35;
+  const posY = isMobile ? -2.8 : -3.8;
 
   return (
     <group position={[0, posY, 0]} scale={scale}>
