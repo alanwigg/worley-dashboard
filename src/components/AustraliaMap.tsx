@@ -5,8 +5,8 @@ const TinyTurbine = ({ x, y, delay, scaleFactor = 1 }: { x: number, y: number, d
   // Boosted base scale from 0.3 to 0.45 for global visibility increase
   <g transform={`translate(${x}, ${y}) scale(${0.45 * scaleFactor})`}>
     
-    {/* Shadow perfectly locked to the (0, 13) base coordinate spreading leftwards */}
-    <ellipse cx="-10" cy="13" rx="10" ry="1.5" fill="rgba(0,0,0,0.5)" />
+    {/* Shadow perfectly locked to the base coordinate spreading leftwards, rotated 15deg anti-clockwise, fading to 0 */}
+    <ellipse cx="-10" cy="13" rx="10" ry="1.5" fill="url(#fadeShadow)" transform="rotate(-15, 0, 13)" />
 
     <line x1="0" y1="0" x2="0" y2="12" stroke="var(--alert-red)" strokeWidth="2" />
     <circle cx="0" cy="0" r="1.5" fill="var(--alert-red)" />
@@ -62,6 +62,10 @@ export function AustraliaMap() {
            <filter id="landShadow">
              <feDropShadow dx="-2" dy="2" stdDeviation="3" floodColor="rgba(0,0,0,0.4)" floodOpacity="0.8"/>
            </filter>
+           <linearGradient id="fadeShadow" x1="1" y1="0" x2="0" y2="0">
+             <stop offset="0%" stopColor="rgba(0,0,0,0.8)" />
+             <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+           </linearGradient>
          </defs>
 
          {/* Standard Top-Down Surface Layer */}
