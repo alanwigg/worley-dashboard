@@ -55,8 +55,8 @@ function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isM
   return (
     // Attach the ref directly to the master root structure. The 0,0,0 local origin maps flawlessly to the floor socket!
     <group ref={turbineRootRef} position={[0, posY, 0]} scale={scale}>
-      {/* High speed air speckles floating off the whole structure */}
-      <Sparkles count={50} scale={[4, 4, 8]} position={[0, 4, -2]} size={1.5} speed={0.4} color={CYAN_COLOR} opacity={0.25} />
+      {/* High speed air speckles floating off the whole structure - heavily intensified per user request */}
+      <Sparkles count={150} scale={[8, 8, 10]} position={[0, 4, 0]} size={3.5} speed={0.8} noise={0.2} color={CYAN_COLOR} opacity={0.65} />
 
       {/* Tower - Made translucent so the HUD trunk line glows through from behind */}
       <mesh position={[0, 2.0, 0]}>
@@ -119,8 +119,8 @@ function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isM
                 <meshBasicMaterial color={BG_COLOR} />
                 <Edges color={STROKE_COLOR} threshold={10} />
 
-                {/* Visual Air Movement Trails emitting from the blade tip */}
-                <Trail width={0.15} length={4} color={CYAN_COLOR} attenuation={(t) => t * t} local={false}>
+                {/* Visual Air Movement Trails emitting from the blade tip - Heavily thickened and lengthened */}
+                <Trail width={0.5} length={8} color={CYAN_COLOR} attenuation={(t) => t} local={false}>
                   <mesh position={[0, 1.3, 0]}>
                     <boxGeometry args={[0.01, 0.01, 0.01]} />
                     <meshBasicMaterial transparent opacity={0} />
