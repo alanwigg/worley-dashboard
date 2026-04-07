@@ -141,7 +141,7 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
         <mesh position={[0, 0, -2.002]} rotation={[0, Math.PI, 0]}>
           <circleGeometry args={[0.325, 32]} />
           {/* Hardware alphaTest strictly purges transparent sorting bugs against the translucent red motor housing */}
-          <meshBasicMaterial map={logoTexture} transparent alphaTest={0.1} color="#FFFFFF" />
+          <meshBasicMaterial map={logoTexture} transparent opacity={0.9} alphaTest={0.1} color="#FFFFFF" />
         </mesh>
 
         {/* Nose Dome Bulb */}
