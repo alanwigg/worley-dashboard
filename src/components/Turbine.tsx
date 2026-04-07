@@ -22,6 +22,7 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
 
   // Independent vector tracking enables smooth mechanical realignment back to base zero
   const pointerTrack = useRef({ x: 0, y: 0 });
+  const permanentPhaseOffset = useRef(0); // Bakes abandoned rotational momentum permanently to prevent backwards snap-back
 
   useFrame((state, delta) => {
     const rotSpeed = speedMultiplier.get() * (delta * 60);
@@ -45,15 +46,21 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
          pointerTrack.current.x = THREE.MathUtils.lerp(pointerTrack.current.x, state.pointer.x, 0.1);
          pointerTrack.current.y = THREE.MathUtils.lerp(pointerTrack.current.y, state.pointer.y, 0.1);
       } else {
+         const oldX = pointerTrack.current.x;
          pointerTrack.current.x = THREE.MathUtils.lerp(pointerTrack.current.x, 0, 0.03);
          pointerTrack.current.y = THREE.MathUtils.lerp(pointerTrack.current.y, 0, 0.03);
+         
+         // Harvest the collapsing horizontal X tracking coordinate and permanently inject it into the constant phase engine!
+         // This literally guarantees that as the pointer resets to 0, the tower NEVER rotates backward. It just keeps gracefully spinning forward from its exact abandoned angle!
+         const xLoss = oldX - pointerTrack.current.x;
+         permanentPhaseOffset.current += xLoss * 0.8;
       }
 
       // Create a smooth continuous baseline rotation like OrbitControls autoRotate (Slowed 10% per user request)
       const absoluteAutoRotate = state.clock.getElapsedTime() * 0.22;
       
       // Pointer offset gives the user interactive localized control over the continuous rotation
-      const targetYaw = absoluteAutoRotate + (pointerTrack.current.x * 0.8); 
+      const targetYaw = absoluteAutoRotate + (pointerTrack.current.x * 0.8) + permanentPhaseOffset.current; 
       const targetPitch = pointerTrack.current.y * -0.08; // Structural pitch centers effortlessly to 0 when abandoned
       const targetRoll = pointerTrack.current.x * -0.04; 
       
