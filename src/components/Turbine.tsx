@@ -135,10 +135,10 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
           <meshBasicMaterial ref={motorGradientRef} color={RED_COLOR} transparent />
           <Edges color={STROKE_COLOR} />
           
-          {/* Precision mapped Worley imprint Texture mapped onto a physical Circle Geometry capping the cylinder face */}
-          <mesh position={[0, -0.402, 0]} rotation={[Math.PI / 2, Math.PI, 0]}>
-            <circleGeometry args={[0.28, 32]} />
-            <meshBasicMaterial map={logoTexture} transparent opacity={0.9} depthWrite={false} color="#FFFFFF" />
+          {/* Precision mapped Worley imprint Texture mapped onto a physical Circle Geometry capping the rear cylinder face */}
+          <mesh position={[0, -0.402, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <circleGeometry args={[0.26, 32]} />
+            <meshBasicMaterial map={logoTexture} transparent opacity={0.9} color="#FFFFFF" />
           </mesh>
         </mesh>
 
