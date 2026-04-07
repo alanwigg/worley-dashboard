@@ -67,13 +67,16 @@ export function MetricsModule({ mwSpring, realWindSpeed = 24 }: { mwSpring: Moti
              <div className="w-[30px] h-[30px] flex items-center justify-center relative">
                 <style>{`
                   @keyframes rigidFlap {
-                     0% { transform: rotate(0deg) scale(1); }
-                     50% { transform: rotate(2deg) scale(0.98); }
-                     100% { transform: rotate(-1deg) scale(1.01); }
+                     0% { transform: scale(1); }
+                     100% { transform: scale(0.98); }
+                  }
+                  @keyframes smoothSway {
+                     0% { transform: rotate(1deg) translateY(0.5px); }
+                     100% { transform: rotate(-2deg) translateY(-0.5px); }
                   }
                   .wind-flap {
                      transform-origin: 0px 4px;
-                     animation: rigidFlap 0.25s infinite alternate ease-in-out;
+                     animation: rigidFlap 0.15s infinite alternate ease-in-out, smoothSway 2.5s infinite alternate ease-in-out;
                   }
                   
                   @keyframes slowFlap {

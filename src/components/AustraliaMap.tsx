@@ -3,6 +3,9 @@ import React from 'react';
 
 const TinyTurbine = ({ x, y, delay }: { x: number, y: number, delay: number }) => (
   <g transform={`translate(${x}, ${y}) scale(0.3)`}>
+    {/* Sun cast shadow extended heavily to the left */}
+    <ellipse cx="-12" cy="14" rx="14" ry="2" fill="rgba(0,0,0,0.5)" transform="rotate(15, -12, 14)" />
+
     <line x1="0" y1="0" x2="0" y2="12" stroke="var(--alert-red)" strokeWidth="2" />
     <circle cx="0" cy="0" r="1.5" fill="var(--alert-red)" />
     
@@ -37,6 +40,16 @@ export function AustraliaMap() {
          </div>
       </div>
 
+      {/* Map Legend / Key */}
+      <div className="absolute bottom-6 right-4 flex items-center gap-2 z-10 opacity-80 bg-[var(--cyan-primary)] p-2 rounded-md shadow-lg border border-[var(--background)]/20">
+         <svg width="12" height="15" viewBox="-10 -10 20 25" className="overflow-visible">
+            <TinyTurbine x={0} y={0} delay={0} />
+         </svg>
+         <div className="text-[9px] font-mono text-[var(--background)] font-bold tracking-widest leading-none">
+            = 250 UNITS
+         </div>
+      </div>
+
       {/* Increased viewBox and adjusted negative space so Tasmania renders perfectly without cutoff */}
       <svg width="100%" height="100%" viewBox="0 0 100 90" className="opacity-100 overflow-visible mt-6 drop-shadow-xl">
          <defs>
@@ -47,7 +60,7 @@ export function AustraliaMap() {
 
          {/* Standard Top-Down Surface Layer */}
          <g filter="url(#landShadow)">
-           <g transform="scale(0.034) translate(-40, -100)" fill="var(--background)" stroke="rgba(255,255,255,0.2)" strokeWidth="15">
+           <g transform="scale(0.034) translate(-40, -100)" fill="#003645" fillOpacity="0.8" stroke="var(--cyan-primary)" strokeWidth="6" strokeOpacity="0.3">
              <path d="M105.3,1968.5s16.2-275.3,0-388.6c-16.2-113.3-161.9-599.1-81-663.9,81-64.8,615.3-323.9,615.3-323.9,0,0,178.1-290.8,356.2-299.2l178.1-8.4s210.5-210.5,291.5-210.5,226.7,111.1,226.7,111.1l-99.4,164.2,358.5,161.9L2145.6,0s178.1,300.6,226.7,462.6,194.3,307.7,194.3,307.7c0,0,388.6,360.2,356.2,601.1-32.4,240.9-226.7,597.1-226.7,710.5s-145.7,194.3-145.7,194.3h-469.6l-242.9-210.5s-97.2-194.3-178.1-113.3-210.5-275.3-372.4-275.3-469.6,210.5-647.7,226.7c-178.1,16.2-388.6,145.7-534.4,64.8Z"/>
              <path d="M2253.4,2510.5s63.6,279.9,140,279.9,152.7-229,152.7-229l-292.7-50.9Z"/>
            </g>

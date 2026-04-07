@@ -76,7 +76,7 @@ export function PowerGauge({ mwSpring }: { mwSpring: MotionValue<number> }) {
         <motion.path 
           d="M 35,170 A 115,115 0 0,1 265,170" 
           fill="none" 
-          stroke="var(--cyan-primary)" 
+          stroke="url(#cyanRed)" 
           strokeWidth="2" 
           strokeLinecap="round"
           strokeDasharray="361.28 1000"
