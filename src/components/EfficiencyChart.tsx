@@ -8,7 +8,7 @@ export function EfficiencyChart({ data }: { data: any[] }) {
   const currentEfficiency = data[data.length - 1]?.efficiency.toFixed(1) || 0;
 
   return (
-    <div className="relative w-[300px] h-[220px] flex flex-col items-start mt-8">
+    <div className="relative w-full h-[220px] flex flex-col items-start mt-8">
       {/* Header */}
       <div className="text-[var(--foreground)] text-sm font-bold uppercase tracking-widest w-full pb-1 text-left mb-4">
         Energy Efficiency

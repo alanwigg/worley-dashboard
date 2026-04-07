@@ -1,17 +1,22 @@
 "use client";
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSpring } from 'framer-motion';
 import { useWindData } from '@/hooks/useWindData';
 import { Turbine } from './Turbine';
 import { PowerGauge } from './PowerGauge';
 import { EfficiencyChart } from './EfficiencyChart';
 import { MetricsModule } from './MetricsModule';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 
 import { AustraliaMap } from './AustraliaMap';
 
 export default function Dashboard() {
   const { targetMW, history } = useWindData();
+  const dataVisRef = useRef<HTMLDivElement>(null);
+
+  const scrollToData = () => {
+    dataVisRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   // Spring to smoothly interpolate the target MW changes
   const mwSpring = useSpring(targetMW, {
@@ -57,10 +62,19 @@ export default function Dashboard() {
       {/* Center Visualization */}
       <div className="flex-[1.5] flex justify-center items-center w-full z-10 relative mt-16 lg:mt-0 translate-x-0 lg:translate-x-[35px]">
         <Turbine mwValue={mwSpring} />
+        
+        {/* Mobile Interactive Scroll Bypass */}
+        <button 
+           onClick={scrollToData}
+           className="lg:hidden absolute bottom-4 animate-bounce flex items-center justify-center bg-[var(--cyan-primary)] text-[var(--background)] p-3 rounded-full hover:bg-[var(--foreground)] transition-colors shadow-2xl z-50 ring-2 ring-[var(--background)]/10"
+           aria-label="Scroll past 3D module"
+        >
+           <ChevronDown size={32} />
+        </button>
       </div>
 
       {/* Right Column - Data Vis */}
-      <div className="flex-1 flex flex-col items-center lg:items-end text-right z-50 w-full lg:max-w-sm p-4 pt-10 lg:pt-4">
+      <div ref={dataVisRef} className="flex-1 flex flex-col items-center lg:items-end text-right z-50 w-full lg:max-w-sm p-4 pt-10 lg:pt-4">
         <div className="w-full mb-12 relative flex flex-col items-center gap-6">
 
           {/* Top Metrics - Box explicitly removed per user request */}
