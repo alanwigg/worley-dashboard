@@ -42,24 +42,6 @@ export function MetricsModule({ mwSpring, realWindSpeed = 24, aestTime = "00:00:
 
   return (
     <div className="w-full max-w-[360px] flex gap-3 mt-4 items-end justify-between">
-       {/* TIME PANEL - Box explicitly removed, raw analogue interface */}
-       <div className="flex-1 flex flex-col items-center justify-center relative p-3">
-          <span className="text-[8px] h-6 flex items-end justify-center text-[#faf8ef] uppercase tracking-widest font-mono mb-3 text-center leading-tight whitespace-nowrap">Eastern<br/>Time</span>
-          <div className="relative w-[32px] h-[32px]">
-             <svg width="32" height="32" viewBox="0 0 32 32" className="drop-shadow-[0_0_5px_rgba(41,200,193,0.3)]">
-                {/* Dial ring */}
-                <circle cx="16" cy="16" r="15" fill="transparent" stroke="var(--cyan-primary)" strokeWidth="1.5" strokeOpacity="0.4"/>
-                {/* Center dot */}
-                <circle cx="16" cy="16" r="1.5" fill="var(--cyan-primary)" />
-                {/* Hour hand */}
-                <line x1="16" y1="16" x2="16" y2="8" stroke="#faf8ef" strokeWidth="1.5" strokeLinecap="round" transform={`rotate(${hourAngle} 16 16)`} />
-                {/* Minute hand */}
-                <line x1="16" y1="16" x2="16" y2="4" stroke="var(--cyan-primary)" strokeWidth="1" strokeLinecap="round" transform={`rotate(${minuteAngle} 16 16)`} />
-                {/* Second hand */}
-                <line x1="16" y1="16" x2="16" y2="2" stroke="var(--alert-red)" strokeWidth="0.5" strokeLinecap="round" transform={`rotate(${secondAngle} 16 16)`} />
-             </svg>
-          </div>
-       </div>
 
        {/* GRID LOAD PANEL */}
        <div className="flex-1 bg-[var(--surface)]/30 border border-[var(--grid)] p-3 rounded flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm">
@@ -77,6 +59,25 @@ export function MetricsModule({ mwSpring, realWindSpeed = 24, aestTime = "00:00:
              {alertText as any}
           </motion.span>
        </div>
+
+       {/* TIME PANEL - Scaled 100% larger and forced to center index */}
+       <div className="flex-1 flex flex-col items-center justify-center relative p-3">
+          <span className="text-[8px] h-6 flex items-end justify-center text-[#faf8ef] uppercase tracking-widest font-mono mb-3 text-center leading-tight whitespace-nowrap">Eastern<br/>Time</span>
+          <div className="relative w-[64px] h-[64px]">
+             <svg width="64" height="64" viewBox="0 0 64 64" className="drop-shadow-[0_0_5px_rgba(41,200,193,0.3)]">
+                {/* Dial ring */}
+                <circle cx="32" cy="32" r="30" fill="transparent" stroke="var(--cyan-primary)" strokeWidth="2.5" strokeOpacity="0.4"/>
+                {/* Center dot */}
+                <circle cx="32" cy="32" r="2.5" fill="var(--cyan-primary)" />
+                {/* Hour hand */}
+                <line x1="32" y1="32" x2="32" y2="16" stroke="#faf8ef" strokeWidth="2.5" strokeLinecap="round" transform={`rotate(${hourAngle} 32 32)`} />
+                {/* Minute hand */}
+                <line x1="32" y1="32" x2="32" y2="8" stroke="var(--cyan-primary)" strokeWidth="1.5" strokeLinecap="round" transform={`rotate(${minuteAngle} 32 32)`} />
+                {/* Second hand */}
+                <line x1="32" y1="32" x2="32" y2="4" stroke="var(--alert-red)" strokeWidth="1" strokeLinecap="round" transform={`rotate(${secondAngle} 32 32)`} />
+             </svg>
+          </div>
+       </div>
        
        {/* WINDSPEED PANEL */}
        <div className="flex-1 bg-[var(--surface)]/30 border border-[var(--grid)] p-3 rounded flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm">
@@ -88,6 +89,7 @@ export function MetricsModule({ mwSpring, realWindSpeed = 24, aestTime = "00:00:
                 <motion.div className="text-[20px] font-mono font-bold leading-none text-[var(--cyan-primary)]">
                    <motion.span>{displayWindSpeed}</motion.span>
                 </motion.div>
+                <span className="text-[8px] text-[var(--muted)] ml-1 mb-[2px]">km/h</span>
              </div>
              
              {/* Animated Airsock Illustration */}
