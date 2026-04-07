@@ -74,11 +74,11 @@ export default function Dashboard() {
       </div>
 
       {/* Right Column - Data Vis */}
-      <div ref={dataVisRef} className="flex-1 flex flex-col items-center lg:items-end text-right z-50 w-full lg:max-w-sm p-4 pt-10 lg:pt-4">
-        <div className="w-full mb-12 relative flex flex-col items-center gap-6">
+      <div ref={dataVisRef} className="flex-1 flex flex-col items-start text-left z-50 w-full lg:max-w-sm p-4 pt-10 lg:pt-4">
+        <div className="w-full mb-12 relative flex flex-col items-start gap-6">
 
           {/* Top Metrics - Box explicitly removed per user request */}
-          <div className="w-full flex flex-col items-center gap-4">
+          <div className="w-full flex flex-col items-start gap-4">
             <PowerGauge mwSpring={mwSpring} />
             <MetricsModule mwSpring={mwSpring} realWindSpeed={realWindSpeed} />
           </div>

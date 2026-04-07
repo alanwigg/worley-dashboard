@@ -41,7 +41,7 @@ export function AustraliaMap() {
       </div>
 
       {/* Map Legend / Key */}
-      <div className="absolute bottom-6 right-4 flex items-center gap-2 z-10 opacity-80 bg-[var(--cyan-primary)] p-2 rounded-md shadow-lg border border-[var(--background)]/20">
+      <div className="absolute bottom-6 left-4 flex items-center gap-2 z-10 opacity-80 bg-[var(--cyan-primary)] p-2 rounded-md shadow-lg border border-[var(--background)]/20">
          <svg width="12" height="15" viewBox="-10 -10 20 25" className="overflow-visible">
             <TinyTurbine x={0} y={0} delay={0} />
          </svg>
