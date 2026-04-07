@@ -64,12 +64,12 @@ export function AustraliaMap() {
              <stop offset="100%" stopColor="rgba(0,0,0,0)" />
            </linearGradient>
            
-           {/* Subtle terrain tonality mapping across the continent */}
-           <linearGradient id="terrainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-             <stop offset="0%" stopColor="#00485c" stopOpacity="0.95" />
-             <stop offset="40%" stopColor="#003645" stopOpacity="0.85" />
-             <stop offset="85%" stopColor="#00222b" stopOpacity="0.9" />
-             <stop offset="100%" stopColor="#001820" stopOpacity="0.95" />
+           {/* Subtle terrain tonality mapping: light source coming from top-right to match turbine drop shadows */}
+           <linearGradient id="terrainGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+             <stop offset="0%" stopColor="#001820" stopOpacity="0.95" />
+             <stop offset="40%" stopColor="#00222b" stopOpacity="0.9" />
+             <stop offset="85%" stopColor="#003645" stopOpacity="0.85" />
+             <stop offset="100%" stopColor="#00485c" stopOpacity="0.95" />
            </linearGradient>
          </defs>
 
