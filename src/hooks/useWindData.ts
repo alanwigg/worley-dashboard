@@ -52,9 +52,9 @@ export function useWindData() {
       // Australian offshore wind generally hits extreme peaks in the dead of night (2 AM) 
       // and troughs slightly during the mid-afternoon (2 PM) due to thermal ocean inversion
       // Base metric derived from constant offshore flow plus randomized micro-variances
-      const baseMW = 8.2;
+      const baseMW = 7.5; // Dropped base payload so it naturally averages in the 7s and 8s
       const now = Date.now();
-      const sineWave = Math.sin(now / 2000) * 0.5; // slow breathing waveform
+      const sineWave = Math.sin(now / 3000) * 1.5; // Deeper breathing waveform pushing +/- 1.5 MW
       
       // Calculate a diurnal curve to map the AEST clock into a Nocturnal Low-Level Jet phenomenon
       const hour = new Date().toLocaleTimeString('en-US', { timeZone: 'Australia/Sydney', hour: 'numeric', hour12: false });
@@ -64,14 +64,14 @@ export function useWindData() {
       const isNight = currentHour >= 22 || currentHour <= 4;
       const timeOfDay = isNight ? (currentHour >= 22 ? currentHour - 22 : currentHour + 2) / 6 : 0;
       
-      // We scale it by 1.2 at night instead of 1.8 to prevent it breaching 10 MW
-      const diurnalCurve = isNight ? Math.sin(timeOfDay * Math.PI) * 1.2 : 0;
+      // Scale it up slightly at night to hit the high 9s, but let it fall back naturally
+      const diurnalCurve = isNight ? Math.sin(timeOfDay * Math.PI) * 0.8 : 0;
       
-      const noise = (Math.random() - 0.5) * 0.05; // tiny micro stutter
+      const noise = (Math.random() - 0.5) * 0.1; // slightly wider micro stutter
       let newMW = baseMW + sineWave + diurnalCurve + noise;
       
-      // Hard clamp MW output to never exceed 9.98 specifically per user structural request
-      newMW = Math.max(6.0, Math.min(9.98, newMW)); 
+      // Hard clamp MW output so it never touches 10.0, but allow it to fall cleanly to 4.0
+      newMW = Math.max(4.0, Math.min(9.95, newMW)); 
 
       setTargetMW(newMW);
 
