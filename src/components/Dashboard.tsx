@@ -33,9 +33,8 @@ export default function Dashboard() {
     <div className="w-full max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 pt-4 px-6 md:px-12 relative overflow-hidden min-h-[calc(100vh-75px)]">
 
       {/* Left Column - Contextual Text */}
-      <div className="relative flex-1 flex flex-col gap-4 items-start text-left z-50 w-full lg:max-w-sm">
-        {/* Infinite Left & Vertical Sky Mist Background - Square Edges 
-            (Constrained to just cover itself on Mobile, infinite vertical on Desktop) */}
+      {/* Rigidly locked width track to prevent Canvas bounds breathing */}
+      <div className="relative flex flex-col gap-4 items-start text-left z-50 w-full lg:w-[384px] shrink-0">
         <div className="absolute -top-[100vh] -bottom-16 lg:-bottom-[100vh] -left-[100vw] right-[-2rem] bg-[var(--cyan-primary)] opacity-95 backdrop-blur-md -z-10 shadow-2xl" />
 
         <div className="p-2 pb-2 relative text-[var(--background)]">
@@ -53,14 +52,13 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Render the stylized Tech Node map of Australia directly below the text */}
         <div className="w-full text-[var(--background)] z-10 px-2">
           <AustraliaMap />
         </div>
       </div>
 
       {/* Center Visualization */}
-      <div className="flex-[1.5] flex flex-col justify-center items-center w-full z-10 relative mt-16 lg:mt-0 translate-x-0 lg:translate-x-[35px]">
+      <div className="flex-1 flex flex-col justify-center items-center w-full z-10 relative mt-16 lg:mt-0 translate-x-0 lg:translate-x-[35px]">
         <Turbine mwValue={mwSpring} />
         
         {/* Mobile Interactive Scroll Bypass */}
@@ -74,16 +72,15 @@ export default function Dashboard() {
       </div>
 
       {/* Right Column - Data Vis */}
-      <div ref={dataVisRef} className="flex-1 flex flex-col items-start text-left z-50 w-full lg:max-w-sm p-4 pt-10 lg:pt-4">
+      {/* Rigidly locked width track to prevent Canvas bounds breathing */}
+      <div ref={dataVisRef} className="flex flex-col items-start text-left z-50 w-full lg:w-[384px] shrink-0 p-4 pt-10 lg:pt-4">
         <div className="w-full mb-12 relative flex flex-col items-start gap-6">
 
-          {/* Top Metrics - Box explicitly removed per user request */}
           <div className="w-full flex flex-col items-center gap-4">
             <PowerGauge mwSpring={mwSpring} />
             <MetricsModule mwSpring={mwSpring} realWindSpeed={realWindSpeed} aestTime={aestTime} />
           </div>
 
-          {/* Efficiency Chart Glass Container */}
           <div className="w-full mt-2 bg-[var(--background)]/30 backdrop-blur-xl p-6 rounded-xl shadow-2xl border border-white/10">
             <EfficiencyChart data={history} />
           </div>
