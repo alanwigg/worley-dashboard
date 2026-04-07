@@ -134,12 +134,14 @@ function TurbineModel({ mwValue, isMobile, isHovered }: { mwValue: MotionValue<n
           <cylinderGeometry args={[0.55, 0.45, 0.8, 24]} />
           <meshBasicMaterial ref={motorGradientRef} color={RED_COLOR} transparent />
           <Edges color={STROKE_COLOR} />
-          
-          {/* Precision mapped Worley imprint Texture mapped onto a physical Circle Geometry capping the rear cylinder face */}
-          <mesh position={[0, -0.402, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <circleGeometry args={[0.26, 32]} />
-            <meshBasicMaterial map={logoTexture} transparent opacity={0.9} color="#FFFFFF" />
-          </mesh>
+        </mesh>
+        
+        {/* Precision mapped Worley imprint Texture mapped onto a physical Circle Geometry capping the rear cylinder face */}
+        {/* Re-anchored to the absolute Z plane (-2.002) to explicitly bypass local cylinder rotation bugs */}
+        <mesh position={[0, 0, -2.002]} rotation={[0, Math.PI, 0]}>
+          <circleGeometry args={[0.26, 32]} />
+          {/* Hardware alphaTest strictly purges transparent sorting bugs against the translucent red motor housing */}
+          <meshBasicMaterial map={logoTexture} transparent alphaTest={0.1} color="#FFFFFF" />
         </mesh>
 
         {/* Nose Dome Bulb */}
