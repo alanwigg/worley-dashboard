@@ -11,18 +11,11 @@ const STROKE_COLOR = "#faf8ef"; // Ivory Oasis
 const CYAN_COLOR = "#29c8c1"; // Sky Mist
 const RED_COLOR = "#f43a4f"; // Scorched Rose
 
-function TurbineModel({ mwValue }: { mwValue: MotionValue<number> }) {
+function TurbineModel({ mwValue, isMobile }: { mwValue: MotionValue<number>, isMobile: boolean }) {
   const bladesRef = useRef<THREE.Group>(null);
   const gearsRef = useRef<THREE.Group>(null);
+  const nacelleRef = useRef<THREE.Group>(null);
   const motorGradientRef = useRef<THREE.MeshBasicMaterial>(null);
-
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   const speedMultiplier = useTransform(mwValue, [0, 10], [0.005, 0.04]);
   const redIntensity = useTransform(mwValue, [7, 10], [0.2, 1.0]);
@@ -38,6 +31,15 @@ function TurbineModel({ mwValue }: { mwValue: MotionValue<number> }) {
     }
     if (motorGradientRef.current) {
       motorGradientRef.current.opacity = redIntensity.get();
+    }
+    
+    // Desktop Nacelle Tracking - the nose physically swivels to follow the cursor!
+    if (!isMobile && nacelleRef.current) {
+      const targetYaw = state.pointer.x * -1.2; // Left/Right Swivel
+      const targetPitch = state.pointer.y * -0.4; // Subtle Up/Down Tilt
+      
+      nacelleRef.current.rotation.y += (targetYaw - nacelleRef.current.rotation.y) * 0.05;
+      nacelleRef.current.rotation.x += (targetPitch - nacelleRef.current.rotation.x) * 0.05;
     }
   });
 
@@ -63,8 +65,8 @@ function TurbineModel({ mwValue }: { mwValue: MotionValue<number> }) {
         <Edges color={STROKE_COLOR} threshold={15} />
       </mesh>
 
-      {/* Hub & Nacelle */}
-      <group position={[0, 4.2, 0.4]}>
+      {/* Hub & Nacelle - Ref attached here to allow the whole top section to physically turn! */}
+      <group ref={nacelleRef} position={[0, 4.2, 0.4]}>
 
         {/* Nacelle Main Body (Front Half) - Sky Mist */}
         <mesh position={[0, 0, -0.6]} rotation={[Math.PI / 2, 0, 0]}>
@@ -199,28 +201,17 @@ function FlowLines({ mwValue }: { mwValue: MotionValue<number> }) {
   );
 }
 
-function CameraRig() {
-  useFrame((state) => {
-    // Base camera vector is [10, 3, 11]
-    // Multiply inverted pointer values to shift the camera opposite the mouse, creating a smooth physical object parallax effect
-    const targetX = 10 + (state.pointer.x * -7); 
-    const targetY = 3 + (state.pointer.y * -4);
-    const targetZ = 11 + (state.pointer.x * 3); // Keeps orbital arc consistent
-
-    // Easing mathematical step - highly dampened (0.05) to ensure it feels "heavy" and not jerky!
-    state.camera.position.x += (targetX - state.camera.position.x) * 0.03;
-    state.camera.position.y += (targetY - state.camera.position.y) * 0.03;
-    state.camera.position.z += (targetZ - state.camera.position.z) * 0.03;
-    
-    // Look gently up at the primary Nacelle hub gear
-    state.camera.lookAt(0, 1.5, 0); 
-  });
-  return null;
-}
-
 export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
-    <div className="relative w-full h-[500px] lg:h-[750px] flex flex-col items-center justify-center">
+    <div className={`relative w-full h-[500px] lg:h-[750px] flex flex-col items-center justify-center ${isMobile ? 'cursor-grab active:cursor-grabbing' : ''}`}>
       {/* Background ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[var(--cyan-primary)] rounded-full blur-[140px] opacity-10 pointer-events-none z-0" />
 
@@ -228,9 +219,13 @@ export const Turbine = ({ mwValue }: { mwValue: MotionValue<number> }) => {
       <Canvas camera={{ position: [10, 3, 11], fov: 45 }} style={{ zIndex: 10 }}>
         <ambientLight intensity={1} />
         <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.1}>
-          <TurbineModel mwValue={mwValue} />
+          <TurbineModel mwValue={mwValue} isMobile={isMobile} />
         </Float>
-        <CameraRig />
+        
+        {/* Strictly inject tactile OrbitControls natively back on Mobile grids for swipe functionality! */}
+        {isMobile && (
+          <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.3} maxPolarAngle={Math.PI / 2.1} minPolarAngle={Math.PI / 3.5} />
+        )}
       </Canvas>
 
       <FlowLines mwValue={mwValue} />
