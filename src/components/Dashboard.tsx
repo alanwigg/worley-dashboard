@@ -58,7 +58,7 @@ export default function Dashboard() {
       </div>
 
       {/* Center Visualization */}
-      <div className="flex-1 flex flex-col justify-center items-center w-full z-10 relative mt-16 lg:mt-0 translate-x-0 lg:translate-x-[35px]">
+      <div className="flex-1 flex flex-col justify-center items-center w-full z-10 relative mt-16 lg:mt-0 translate-x-0 lg:translate-x-[35px] min-w-0">
         <Turbine mwValue={mwSpring} />
         
         {/* Mobile Interactive Scroll Bypass */}
