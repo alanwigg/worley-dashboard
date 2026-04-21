@@ -58,5 +58,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
