@@ -2,7 +2,7 @@ import Dashboard from '@/components/Dashboard';
 
 export default function Home() {
   return (
-    <main className="h-[100vh] text-[var(--foreground)] relative overflow-hidden font-sans">
+    <main className="min-h-screen text-[var(--foreground)] relative overflow-x-hidden font-sans">
       
       {/* Permanent Fixed Background Layer to prevent Mobile URL-bar layout jumps */}
       <div className="fixed top-0 left-0 w-full h-[100lvh] -z-50 pointer-events-none" style={{
@@ -18,7 +18,7 @@ export default function Home() {
         backgroundSize: '40px 40px'
       }} />
 
-      <div className="h-full w-full">
+      <div className="w-full">
          <Dashboard />
       </div>
     </main>

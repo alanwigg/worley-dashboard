@@ -30,11 +30,11 @@ export default function Dashboard() {
   }, [targetMW, mwSpring]);
 
   return (
-    <div className="w-full mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 pt-4 px-6 md:px-12 relative overflow-hidden h-full">
+    <div className="w-full max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 pt-4 px-6 md:px-12 relative overflow-hidden min-h-screen">
 
       {/* Left Column - Contextual Text */}
       {/* Rigidly locked width track to prevent Canvas bounds breathing */}
-      <div className="relative flex flex-col gap-4 items-start text-left z-50 w-full lg:w-[384px] shrink-0 panel">
+      <div className="relative flex flex-col gap-4 items-start text-left z-50 w-full lg:w-[384px] shrink-0">
         <div className="absolute -top-[100vh] -bottom-16 lg:-bottom-[100vh] -left-[100vw] right-[-2rem] bg-[var(--cyan-primary)] opacity-95 backdrop-blur-md -z-10 shadow-2xl" />
 
         <div className="p-2 pb-2 relative text-[var(--background)]">
@@ -73,7 +73,7 @@ export default function Dashboard() {
 
       {/* Right Column - Data Vis */}
       {/* Rigidly locked width track to prevent Canvas bounds breathing */}
-      <div ref={dataVisRef} className="flex flex-col items-start text-left z-50 w-full lg:w-[384px] shrink-0 p-4 pt-10 lg:pt-4 panel">
+      <div ref={dataVisRef} className="flex flex-col items-start text-left z-50 w-full lg:w-[384px] shrink-0 p-4 pt-10 lg:pt-4">
         <div className="w-full mb-12 relative flex flex-col items-start gap-6">
 
           <div className="w-full flex flex-col items-center gap-4">
