@@ -59,10 +59,14 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+html, body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
 
+html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
